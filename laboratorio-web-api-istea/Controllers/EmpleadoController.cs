@@ -59,10 +59,11 @@ public class EmpleadoController : ControllerBase
         return NoContent();
     }
 
+    //TODO: AGREGAR EL DTO PARA MANEJAR EL BODY CON FECHAS
     [HttpGet("ObtenerIngresosDeEmpleado/{id}")]
     public async Task<ActionResult<HorariosIngresoSistemaDTO>> GetHorariosIngresoSistema(
         [FromRoute] int empleadoId,
-        [FromBody] DateTime fechaInicio,
+        DateTime fechaInicio,
         [FromBody] DateTime fechaFin = new DateTime())
     {
         var horarios = await _empleadoService.GetHorariosIngresoSistema(empleadoId, fechaInicio, fechaFin);
