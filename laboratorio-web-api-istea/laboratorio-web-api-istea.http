@@ -1,0 +1,6 @@
+@laboratorio_web_api_istea_HostAddress = http://localhost:5278
+
+GET {{laboratorio_web_api_istea_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
