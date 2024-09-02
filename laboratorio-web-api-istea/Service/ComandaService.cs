@@ -43,9 +43,11 @@ public class ComandaService : IComandaService
         throw new NotImplementedException();
     }
 
-    public async void Delete(int idComanda)
+    public async Task<bool> Delete(int idComanda)
     {
         Comanda comanda = await _unitOfWork.ComandaRepository.GetId(idComanda);
         _unitOfWork.ComandaRepository.Delete(comanda);
+        var result = await _unitOfWork.Save();
+        return result > 0;
     }
 }

@@ -14,8 +14,7 @@ namespace laboratorio_web_api_istea.DAL
         public ISectorRepository SectorRepository { get; }
 
         private readonly RestauranteContext _context;
-        private RestauranteContext restauranteContext;
-        private object value;
+
         public UnitOfWork(RestauranteContext context, IComandaRepository comandaRepository, IEmpleadoRepository empleadoRepository, IPedidoRepository pedidoRepository, ISectorRepository sectorRepository)
         {
             _context = context;
@@ -24,18 +23,6 @@ namespace laboratorio_web_api_istea.DAL
             PedidoRepository = pedidoRepository;
             SectorRepository = sectorRepository;
         }
-
-        /*
-        public UnitOfWork(RestauranteContext RestauranteContext, IComandaRepository comandaRepository, IEmpleadoRepository empleadoRepository, IPedidoRepository pedidoRepository, ISectorRepository sectorRepository, object value)
-        {
-            this.restauranteContext = restauranteContext;
-            ComandaRepository = comandaRepository;
-            EmpleadoRepository = empleadoRepository;
-            PedidoRepository = pedidoRepository;
-            SectorRepository = sectorRepository;
-            this.value = value;
-        }
-        */
 
         public void Dispose()
         {

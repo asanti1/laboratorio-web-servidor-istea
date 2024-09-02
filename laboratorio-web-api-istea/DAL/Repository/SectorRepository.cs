@@ -1,5 +1,6 @@
 ﻿using laboratorio_web_api_istea.DAL.Models;
 using laboratorio_web_api_istea.DAL.Repository.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace laboratorio_web_api_istea.DAL.Repository
 {
@@ -9,5 +10,24 @@ namespace laboratorio_web_api_istea.DAL.Repository
         {
 
         }
+
+        async Task<Sectore> ISectorRepository.GetSectorByDescription(string description)
+        {
+            try
+            {
+                var newSector = await _context.Sectores
+                    .Include(s => s.Empleados)  // Incluye Empleados
+                    .Include(s => s.Productos)  // Incluye Productos
+                    .FirstOrDefaultAsync(s => s.Descripcion == description);
+
+                return newSector;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
+
     }
 }

@@ -73,7 +73,7 @@ public class EmpleadoService : IEmpleadoService
         throw new NotImplementedException();
     }
 
-    public void Delete(int empleadoId)
+    public Task<bool> Delete(int empleadoId)
     {
         throw new NotImplementedException();
     }

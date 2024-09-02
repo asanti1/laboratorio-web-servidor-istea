@@ -29,10 +29,7 @@ public class PedidoService : IPedidoService
     {
         try {
             // Retrieve the sector by its description
-           var newSector = await _context.Sectores
-            .Include(s => s.Empleados)  // Assuming you need to include employees
-            .Include(s => s.Productos)  // Assuming you need to include products
-            .FirstOrDefaultAsync(s => s.Descripcion == sector);
+            var newSector = await _unitOfWork.SectorRepository.GetSectorByDescription(sector);
 
         if (newSector == null)
         {
@@ -40,21 +37,19 @@ public class PedidoService : IPedidoService
             return new List<Pedido>(); // or throw an exception depending on your requirements
         }
 
-        // Retrieve pedidos associated with the sector
-        var pedidos = await _context.Pedidos
-            .Where(p => newSector.Productos.Any(pr => pr.IdProducto == p.IdProducto))
-            .ToListAsync();
+            // Retrieve pedidos associated with the sector
+            var pedidos = await _unitOfWork.PedidoRepository.GetPedidosBySector(newSector);
 
-        return pedidos;
-    }
-    catch (Exception ex)
-    {
-        // Optionally log the exception
-        // _logger.LogError(ex, "An error occurred while retrieving pedidos by sector.");
+            return pedidos;
+        }
+        catch (Exception ex)
+        {
+            // Optionally log the exception
+            // _logger.LogError(ex, "An error occurred while retrieving pedidos by sector.");
 
-        throw new ApplicationException("An error occurred while retrieving pedidos by sector.", ex);
+            throw new ApplicationException("An error occurred while retrieving pedidos by sector.", ex);
+        }
     }
-}
     
     public async Task<List<Pedido>> GetPedidosNoEntregadosATiempo()
     {

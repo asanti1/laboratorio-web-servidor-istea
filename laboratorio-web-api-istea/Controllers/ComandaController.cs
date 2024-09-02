@@ -45,12 +45,12 @@ public class ComandaController : ControllerBase
     [HttpDelete("BorrarComanda/{idComanda}")]
     public async Task<ActionResult> Delete([FromRoute] int idComanda)
     {
-        var comanda = await _comandaService.Delete(idComanda);
-        if (comanda != null)
+        bool success = await _comandaService.Delete(idComanda);
+        
+        if (success)
         {
             return NoContent();
         }
-
         return NotFound();
     }
 }

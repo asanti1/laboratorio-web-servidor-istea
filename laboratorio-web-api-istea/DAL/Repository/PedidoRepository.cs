@@ -40,5 +40,21 @@ namespace laboratorio_web_api_istea.DAL.Repository
                 .Select(g => g.First())
                 .ToListAsync();
         }
+
+        async Task<List<Pedido>> IPedidoRepository.GetPedidosBySector(Sectore sector)
+        {
+            try
+            {
+                var pedidos = await _context.Pedidos
+                .Where(p => sector.Productos.Any(pr => pr.IdProducto == p.IdProducto))
+                .ToListAsync();
+
+                return pedidos;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
     }
 }

@@ -54,8 +54,8 @@ public class EmpleadoController : ControllerBase
     [HttpDelete("EliminarEmpleado/{id}")]
     public async Task<ActionResult> Delete([FromRoute] int empleadoId)
     {
-        var empleado = await _empleadoService.Delete(empleadoId);
-        if (empleado == null) return NotFound();
+        bool success= await _empleadoService.Delete(empleadoId);
+        if (!success) return NotFound();
         return NoContent();
     }
 
