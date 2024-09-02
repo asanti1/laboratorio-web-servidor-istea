@@ -1,5 +1,6 @@
 using laboratorio_web_api_istea.DAL.Models;
 using laboratorio_web_api_istea.Service;
+using laboratorio_web_api_istea.Service.Interface;
 using Microsoft.AspNetCore.Mvc;
 
 namespace laboratorio_web_api_istea.Controllers;
@@ -8,9 +9,9 @@ namespace laboratorio_web_api_istea.Controllers;
 [ApiController]
 public class PedidoController : ControllerBase
 {
-    private readonly PedidoService _pedidoService;
+    private readonly IPedidoService _pedidoService;
 
-    public PedidoController(PedidoService pedidoService)
+    public PedidoController(IPedidoService pedidoService)
     {
         _pedidoService = pedidoService;
     }
