@@ -10,16 +10,16 @@ namespace laboratorio_web_api_istea.Service;
 public class EmpleadoService : IEmpleadoService
     
 {
-    private readonly RestauranteContext _context;
-    public EmpleadoService(RestauranteContext context)
+    private readonly IUnitOfWork _unitOfWork;
+    public EmpleadoService(IUnitOfWork unitOfWork)
     {
-        _context = context;
+        _unitOfWork = unitOfWork;
     }
     public async Task<List<Empleado>> GetAll()
     {
         try
         {
-            return await _context.Empleados.ToListAsync();
+            return await _unitOfWork.EmpleadoRepository.GetAll();
         }
         catch
         {
@@ -31,7 +31,7 @@ public class EmpleadoService : IEmpleadoService
     {
         try
         {
-            var empleado = await _context.Empleados.FindAsync(empleadoId);
+            var empleado = await _unitOfWork.EmpleadoRepository.GetId(empleadoId);
 
             if (empleado == null)
             {
@@ -54,8 +54,8 @@ public class EmpleadoService : IEmpleadoService
     {
         try
         {
-            _context.Empleados.Add(empleado);
-            await _context.SaveChangesAsync();  // Save the changes to the database
+            await _unitOfWork.EmpleadoRepository.Add(empleado);
+            await _unitOfWork.Save();  // Save the changes to the database
 
             return empleado;  // Return the newly added employee
         }
@@ -73,7 +73,7 @@ public class EmpleadoService : IEmpleadoService
         throw new NotImplementedException();
     }
 
-    public async Task<Empleado> Delete(int empleadoId)
+    public void Delete(int empleadoId)
     {
         throw new NotImplementedException();
     }

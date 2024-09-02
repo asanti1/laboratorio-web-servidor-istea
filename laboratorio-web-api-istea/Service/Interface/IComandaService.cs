@@ -7,5 +7,5 @@ public interface IComandaService
     Task<Comanda> Get(int idComanda);
     Task<Comanda> Add(Comanda comanda);
     Task<Comanda> Update(int idComanda, Comanda comanda);
-    Task<Comanda> Delete(int idComanda);
+    void Delete(int idComanda);
 }

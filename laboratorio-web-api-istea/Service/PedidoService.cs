@@ -1,4 +1,5 @@
 using laboratorio_web_api_istea.DAL;
+using laboratorio_web_api_istea.DAL.Enum;
 using laboratorio_web_api_istea.DAL.Models;
 using laboratorio_web_api_istea.Service.Interface;
 using Microsoft.EntityFrameworkCore;
@@ -7,16 +8,16 @@ namespace laboratorio_web_api_istea.Service;
 
 public class PedidoService : IPedidoService
 {
-    private readonly RestauranteContext _context;
-    public PedidoService(RestauranteContext context)
+    private readonly IUnitOfWork _unitOfWork;
+    public PedidoService(IUnitOfWork unitOfWork)
     {
-        _context = context;
+        _unitOfWork = unitOfWork;
     }
     public async Task<List<Pedido>> GetPedidos()
     {
         try
         {
-            return await _context.Pedidos.ToListAsync();
+            return await _unitOfWork.PedidoRepository.GetAll();
         }
         catch
         {
@@ -59,9 +60,7 @@ public class PedidoService : IPedidoService
     {
         try
         {
-            return await _context.Pedidos
-                .Where(p => p.IdEstado == 2)
-                .ToListAsync();
+            return await _unitOfWork.PedidoRepository.GetPedidoByEstado((int)EstadoPedidoEnum.LISTO_PARA_SERVIR);
         }
         catch
         {
@@ -73,11 +72,7 @@ public class PedidoService : IPedidoService
     {
         try
         {
-            return await _context.Pedidos
-                .GroupBy(p => p.IdProducto)
-                .OrderBy(g => g.Count())
-                .Select(g => g.First())
-                .ToListAsync();
+            return await _unitOfWork.PedidoRepository.GetMenosPedido();
         }
         catch
         {
@@ -89,11 +84,7 @@ public class PedidoService : IPedidoService
     {
         try
         {
-            return await _context.Pedidos
-                .GroupBy(p => p.IdProducto)
-                .OrderByDescending(g => g.Count())
-                .Select(g => g.First())
-                .ToListAsync();
+            return await _unitOfWork.PedidoRepository.GetMasPedido();
         }
         catch
         {
@@ -107,8 +98,7 @@ public class PedidoService : IPedidoService
         {
             if (id != null)
             {
-                return await _context.Pedidos
-               .FirstOrDefaultAsync(p => p.IdPedido == id);
+                return await _unitOfWork.PedidoRepository.GetId(id);
             }
             throw new Exception("El id no puede ser nulo4"); 
         }
@@ -120,10 +110,9 @@ public class PedidoService : IPedidoService
 
     public async Task<Pedido> CambiarEstadoPedido(int id, string estado)
     {
-        try { 
-           
-            var pedido = await _context.Pedidos
-                .FirstOrDefaultAsync(p => p.IdPedido == id);
+        try {
+
+            Pedido pedido = await _unitOfWork.PedidoRepository.GetId(id);
 
             if (pedido == null)
             {
@@ -132,8 +121,8 @@ public class PedidoService : IPedidoService
 
             pedido.IdEstado =Convert.ToInt16(estado);
 
-            _context.Pedidos.Update(pedido);
-            await _context.SaveChangesAsync();
+            await _unitOfWork.PedidoRepository.Add(pedido);
+            var result = await _unitOfWork.Save();
 
             return pedido;
         } 
@@ -147,10 +136,11 @@ public class PedidoService : IPedidoService
     {
         try
         {
-            _context.Pedidos.Add(pedido);
-            await _context.SaveChangesAsync();
+            await _unitOfWork.PedidoRepository.Add(pedido);
+            var result = await _unitOfWork.Save();
 
-            return pedido;
+            Pedido pedidoCreado = await _unitOfWork.PedidoRepository.GetId(pedido.IdPedido);
+            return pedidoCreado;
         }
         catch
         {
