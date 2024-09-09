@@ -15,21 +15,24 @@ namespace laboratorio_web_api_istea.DAL.Repository
 
         public async Task<ComandaGetDTO> ObtenerComandaPorId(int idComanda)
         {
-            var comandaDto =  _context.Comandas
-                .Where(c => c.IdComanda == idComanda) 
+            var comandaDto = await _context.Comandas
+                .Include(c => c.Pedidos)
+                .ThenInclude(p => p.IdProductoNavigation)
+                .ThenInclude(p => p.IdSectorNavigation)
+                .Where(c => c.IdComanda == idComanda)
                 .Select(c => new ComandaGetDTO
                 {
-                    NombreCliente = c.NombreCliente,  
+                    NombreCliente = c.NombreCliente,
                     NombreMesa = c.IdMesaNavigation.Nombre,
                     Productos = c.Pedidos.Select(p => new PedidoEnComandaGetDTO
                     {
-                        NombreProducto = p.IdProductoNavigation.Descripcion,  
-                        Precio = p.IdProductoNavigation.Precio.ToString("F2"), 
+                        NombreProducto = p.IdProductoNavigation.Descripcion,
+                        Precio = p.IdProductoNavigation.Precio.ToString("F2"),
                         Sector = p.IdProductoNavigation.IdSectorNavigation.Descripcion
                     }).ToList()
                 })
-                .FirstOrDefault();
-            return comandaDto;
+                .FirstOrDefaultAsync();
+        return comandaDto;
         }
         
         public async Task<Comanda> AgregarComanda(ComandaPostDTO comanda)

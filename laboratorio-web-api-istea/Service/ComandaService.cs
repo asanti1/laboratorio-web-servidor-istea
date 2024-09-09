@@ -27,7 +27,19 @@ public class ComandaService : IComandaService
 
         return comanda;
     }
+    public async Task<ComandaGetDTO> ObtenerComandaPorId(int idComanda)
+    {
+        var comanda = await _unitOfWork.ComandaRepository.ObtenerComandaPorId(idComanda);
 
+        if (comanda == null)
+        {
+            throw new KeyNotFoundException($"No se encontró una comanda con el ID {idComanda}");
+        }
+
+        return comanda;
+    }
+    
+    
     public async Task<Comanda> Add(ComandaPostDTO comanda)
     {
         return await _unitOfWork.ComandaRepository.AgregarComanda(comanda);

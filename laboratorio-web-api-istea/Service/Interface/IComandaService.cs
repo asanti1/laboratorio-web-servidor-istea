@@ -9,4 +9,5 @@ public interface IComandaService
     Task<Comanda> Add(ComandaPostDTO comanda);
     Task<Comanda> Update(int idComanda, Comanda comanda);
     Task<bool> Delete(int idComanda);
+    Task<ComandaGetDTO> ObtenerComandaPorId(int idComanda);
 }

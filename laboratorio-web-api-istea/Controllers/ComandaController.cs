@@ -22,7 +22,7 @@ public class ComandaController : ControllerBase
     {
         try
         {
-            var comanda = await _comandaService.Get(idComanda);
+            var comanda = await _comandaService.ObtenerComandaPorId(idComanda);
             return Ok(comanda);
         }
         catch (KeyNotFoundException ex)
