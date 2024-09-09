@@ -1,4 +1,5 @@
 using laboratorio_web_api_istea.DAL.Models;
+using laboratorio_web_api_istea.DTO.Pedido;
 using laboratorio_web_api_istea.Service;
 using laboratorio_web_api_istea.Service.Interface;
 using Microsoft.AspNetCore.Mvc;
@@ -48,19 +49,19 @@ public class PedidoController : ControllerBase
         return Ok(pedido);
     }
 
-    [HttpPut("CambiarEstadoPedido/{id}")]
-    public ActionResult<Pedido> CambiarEstadoPedido([FromRoute] int id, [FromBody] string estado)
+    [HttpPut("CambiarEstadoPedido/{pedidoId}")]
+    public ActionResult<Pedido> CambiarEstadoPedido([FromRoute] int pedidoId, [FromBody] int estado)
     {
-        var pedido = _pedidoService.CambiarEstadoPedido(id, estado);
+        var pedido = _pedidoService.CambiarEstadoPedido(pedidoId, estado);
         if (pedido == null) return NotFound();
         return Created(string.Empty, pedido);
     }
 
     [HttpPost("AddPedido")]
-    public ActionResult<Pedido> AddPedido([FromBody] Pedido pedido)
+    public async Task<ActionResult> AddPedido([FromBody] PedidoPostDTO pedido)
     {
-        var ped = _pedidoService.AddPedido(pedido);
-        return Created(string.Empty, ped);
+        var ped = await _pedidoService.AddPedido(pedido);
+        return Created(string.Empty, string.Empty);
     }
 
     [HttpGet("GetMenosPedido")]

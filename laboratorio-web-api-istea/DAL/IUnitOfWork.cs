@@ -5,7 +5,7 @@ namespace laboratorio_web_api_istea.DAL
     public interface IUnitOfWork : IDisposable
     {
         IComandaRepository ComandaRepository { get; }
-        IEmpleadoRepository EmpleadoRepository{ get; }
+        IEmpleadoRepository EmpleadoRepository { get; }
 
         IPedidoRepository PedidoRepository { get; }
 

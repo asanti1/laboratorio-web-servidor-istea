@@ -15,7 +15,9 @@ namespace laboratorio_web_api_istea.DAL
 
         private readonly RestauranteContext _context;
 
-        public UnitOfWork(RestauranteContext context, IComandaRepository comandaRepository, IEmpleadoRepository empleadoRepository, IPedidoRepository pedidoRepository, ISectorRepository sectorRepository)
+        public UnitOfWork(RestauranteContext context, IComandaRepository comandaRepository,
+            IEmpleadoRepository empleadoRepository, IPedidoRepository pedidoRepository,
+            ISectorRepository sectorRepository)
         {
             _context = context;
             ComandaRepository = comandaRepository;
