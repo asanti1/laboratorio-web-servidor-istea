@@ -46,7 +46,7 @@ namespace laboratorio_web_api_istea.DAL.Repository
             try
             {
                 var pedidos = await _context.Pedidos
-                    .Where(pedido => sector.Productos.Any(producto => producto.Id == pedido.ProductoId))
+                    .Where(p => p.Producto.SectorId == sector.Id)
                     .ToListAsync();
 
                 return pedidos;
