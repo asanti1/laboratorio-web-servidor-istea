@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace laboratorio_web_api_istea.DAL.Models;
 
-public partial class Producto
+public class Producto : ClaseBase
 {
-    public int IdProducto { get; set; }
-
-    public int IdSector { get; set; }
+    [ForeignKey(nameof(Sectore))] public int SectorId { get; set; }
 
     public string Descripcion { get; set; } = null!;
 
@@ -15,7 +14,7 @@ public partial class Producto
 
     public decimal Precio { get; set; }
 
-    public virtual Sectore IdSectorNavigation { get; set; } = null!;
-
     public virtual ICollection<Pedido> Pedidos { get; set; } = new List<Pedido>();
+    
+    public virtual Sectore Sector { get; set; } = null!;
 }

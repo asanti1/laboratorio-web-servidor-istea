@@ -3,10 +3,7 @@ using laboratorio_web_api_istea.DAL.Repository;
 using laboratorio_web_api_istea.DAL.Repository.Interfaces;
 using laboratorio_web_api_istea.Service;
 using laboratorio_web_api_istea.Service.Interface;
-using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +14,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+builder.Configuration.AddJsonFile("appsettings.local.json", optional: true, reloadOnChange: true);
 builder.Services.AddDbContext<RestauranteContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
@@ -35,7 +34,7 @@ builder.Services.AddScoped<IUnitOfWork, UnitOfWork>(x => new UnitOfWork(x.GetReq
     x.GetRequiredService<IEmpleadoRepository>(),
     x.GetRequiredService<IPedidoRepository>(),
     x.GetRequiredService<ISectorRepository>()
-    ));
+));
 
 var app = builder.Build();
 

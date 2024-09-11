@@ -1,17 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace laboratorio_web_api_istea.DAL.Models;
 
-public partial class Comanda
+public class Comanda : ClaseBase
 {
-    public int IdComanda { get; set; }
-
-    public int IdMesa { get; set; }
+    [ForeignKey(nameof(Mesa))] public int MesaId { get; set; }
 
     public string NombreCliente { get; set; } = null!;
 
-    public virtual Mesa IdMesaNavigation { get; set; } = null!;
+    public virtual Mesa Mesa { get; set; } = null!;
 
     public virtual ICollection<Pedido> Pedidos { get; set; } = new List<Pedido>();
 }

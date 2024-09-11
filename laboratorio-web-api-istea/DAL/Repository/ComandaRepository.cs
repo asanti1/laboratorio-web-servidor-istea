@@ -10,37 +10,38 @@ namespace laboratorio_web_api_istea.DAL.Repository
     {
         public ComandaRepository(RestauranteContext context) : base(context)
         {
-
         }
 
         public async Task<ComandaGetDTO> ObtenerComandaPorId(int idComanda)
         {
             var comandaDto = await _context.Comandas
                 .Include(c => c.Pedidos)
-                .ThenInclude(p => p.IdProductoNavigation)
-                .ThenInclude(p => p.IdSectorNavigation)
-                .Where(c => c.IdComanda == idComanda)
+                .ThenInclude(p => p.Producto)
+                .ThenInclude(pr => pr.Sector)
+                .Include(c => c.Mesa)
+                .Where(c => c.Id == idComanda)
                 .Select(c => new ComandaGetDTO
                 {
                     NombreCliente = c.NombreCliente,
-                    NombreMesa = c.IdMesaNavigation.Nombre,
+                    NombreMesa = c.Mesa.Nombre,
                     Productos = c.Pedidos.Select(p => new PedidoEnComandaGetDTO
                     {
-                        NombreProducto = p.IdProductoNavigation.Descripcion,
-                        Precio = p.IdProductoNavigation.Precio.ToString("F2"),
-                        Sector = p.IdProductoNavigation.IdSectorNavigation.Descripcion
+                        NombreProducto = p.Producto.Descripcion,
+                        Precio = p.Producto.Precio.ToString("F2"),
+                        Sector = p.Producto.Sector.Descripcion
                     }).ToList()
                 })
                 .FirstOrDefaultAsync();
-        return comandaDto;
+
+            return comandaDto;
         }
-        
+
         public async Task<Comanda> AgregarComanda(ComandaPostDTO comanda)
         {
             Comanda nuevaComanda = new Comanda()
             {
                 NombreCliente = comanda.NombreCliente,
-                IdMesa = comanda.IdMesa,
+                MesaId = comanda.IdMesa,
             };
             _context.Add(nuevaComanda);
             await _context.SaveChangesAsync();

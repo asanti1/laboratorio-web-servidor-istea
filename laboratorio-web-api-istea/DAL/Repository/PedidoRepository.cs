@@ -15,7 +15,7 @@ namespace laboratorio_web_api_istea.DAL.Repository
         {
             try
             {
-                return await _context.Pedidos.Where(p => p.IdEstado == idEstado).ToListAsync();
+                return await _context.Pedidos.Where(p => p.EstadosPedidoId == idEstado).ToListAsync();
             }
             catch (Exception ex)
             {
@@ -26,7 +26,7 @@ namespace laboratorio_web_api_istea.DAL.Repository
         async Task<List<Pedido>> IPedidoRepository.GetMenosPedido()
         {
             return await _context.Pedidos
-                .GroupBy(p => p.IdProducto)
+                .GroupBy(p => p.ProductoId)
                 .OrderBy(g => g.Count())
                 .Select(g => g.First())
                 .ToListAsync();
@@ -35,7 +35,7 @@ namespace laboratorio_web_api_istea.DAL.Repository
         async Task<List<Pedido>> IPedidoRepository.GetMasPedido()
         {
             return await _context.Pedidos
-                .GroupBy(p => p.IdProducto)
+                .GroupBy(p => p.ProductoId)
                 .OrderByDescending(g => g.Count())
                 .Select(g => g.First())
                 .ToListAsync();
@@ -46,7 +46,7 @@ namespace laboratorio_web_api_istea.DAL.Repository
             try
             {
                 var pedidos = await _context.Pedidos
-                    .Where(p => sector.Productos.Any(pr => pr.IdProducto == p.IdProducto))
+                    .Where(pedido => sector.Productos.Any(producto => producto.Id == pedido.ProductoId))
                     .ToListAsync();
 
                 return pedidos;
@@ -65,7 +65,7 @@ namespace laboratorio_web_api_istea.DAL.Repository
 
                 if (pedido == null) throw new KeyNotFoundException("Order not found.");
 
-                pedido.IdEstado = estado;
+                pedido.EstadosPedidoId = estado;
 
                 var result = await _context.SaveChangesAsync();
 
@@ -79,7 +79,6 @@ namespace laboratorio_web_api_istea.DAL.Repository
 
         async Task<Pedido> IPedidoRepository.AddPedido(PedidoPostDTO pedido)
         {
-           
             try
             {
                 var comanda = await _context.Comandas.FindAsync(pedido.IdComanda);
@@ -87,14 +86,14 @@ namespace laboratorio_web_api_istea.DAL.Repository
                 if (comanda == null) throw new Exception("Comanda not found with id: " + pedido.IdComanda);
                 Pedido nuevoPedido = new Pedido()
                 {
-                    IdEstado = pedido.IdEstado,
-                    IdProducto = pedido.IdProducto,
+                    EstadosPedidoId = pedido.IdEstado,
+                    ProductoId = pedido.IdProducto,
                     Cantidad = pedido.Cantidad,
                     FechaCreacion = DateTime.Now,
                     FechaFinalizacion = pedido.FechaFinalizacion,
-                    IdComanda = comanda.IdComanda,
+                    ComandaId = comanda.Id,
                 };
-                
+
                 _context.Add(nuevoPedido);
                 await _context.SaveChangesAsync();
                 return nuevoPedido;
