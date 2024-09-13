@@ -1,5 +1,6 @@
 using laboratorio_web_api_istea.DAL;
 using laboratorio_web_api_istea.DAL.Models;
+using laboratorio_web_api_istea.DTO.Comanda;
 using laboratorio_web_api_istea.Service.Interface;
 using Microsoft.EntityFrameworkCore;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
@@ -9,6 +10,7 @@ namespace laboratorio_web_api_istea.Service;
 public class ComandaService : IComandaService
 {
     private readonly IUnitOfWork _unitOfWork;
+
     public ComandaService(IUnitOfWork unitOfWork)
     {
         _unitOfWork = unitOfWork;
@@ -17,7 +19,7 @@ public class ComandaService : IComandaService
     public async Task<Comanda> Get(int idComanda)
     {
         var comanda = await _unitOfWork.ComandaRepository.GetId(idComanda);
-                                   
+
         if (comanda == null)
         {
             throw new KeyNotFoundException($"No se encontró una comanda con el ID {idComanda}");
@@ -25,17 +27,22 @@ public class ComandaService : IComandaService
 
         return comanda;
     }
-
-    public async Task<Comanda> Add(Comanda comanda)
+    public async Task<ComandaGetDTO> ObtenerComandaPorId(int idComanda)
     {
-        await _unitOfWork.ComandaRepository.Add(comanda);
-        var result = await _unitOfWork.Save();
+        var comanda = await _unitOfWork.ComandaRepository.ObtenerComandaPorId(idComanda);
 
-        if (result == 0)
-            return null;
+        if (comanda == null)
+        {
+            throw new KeyNotFoundException($"No se encontró una comanda con el ID {idComanda}");
+        }
 
-        Comanda comandaCreada = await _unitOfWork.ComandaRepository.GetId(comanda.IdComanda);
-        return comandaCreada;
+        return comanda;
+    }
+    
+    
+    public async Task<Comanda> Add(ComandaPostDTO comanda)
+    {
+        return await _unitOfWork.ComandaRepository.AgregarComanda(comanda);
     }
 
     public async Task<Comanda> Update(int idComanda, Comanda comanda)

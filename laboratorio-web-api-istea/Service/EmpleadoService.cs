@@ -15,11 +15,22 @@ public class EmpleadoService : IEmpleadoService
     {
         _unitOfWork = unitOfWork;
     }
-    public async Task<List<Empleado>> GetAll()
+    public async Task<List<EmpleadoResponseDTO>> GetAll()
     {
         try
         {
-            return await _unitOfWork.EmpleadoRepository.GetAll();
+            var _empleados = await _unitOfWork.EmpleadoRepository.GetAllEmpleados();
+             
+            var _empleadosDTO = _empleados.Select(empleado => new EmpleadoResponseDTO
+            {
+                Id = empleado.Id,
+                Nombre = empleado.Nombre,
+                Usuario = empleado.Usuario,
+                Sector = empleado.Sectore.Descripcion,
+                Rol = empleado.Role.Descripcion
+            }).ToList();
+
+            return _empleadosDTO;
         }
         catch
         {
@@ -27,11 +38,11 @@ public class EmpleadoService : IEmpleadoService
         } 
     }
 
-    public async Task<Empleado> Get(int empleadoId)
+    public async Task<EmpleadoResponseDTO> Get(int empleadoId)
     {
         try
         {
-            var empleado = await _unitOfWork.EmpleadoRepository.GetId(empleadoId);
+            var empleado = await _unitOfWork.EmpleadoRepository.GetEmpleadoById(empleadoId);
 
             if (empleado == null)
             {
@@ -39,7 +50,17 @@ public class EmpleadoService : IEmpleadoService
                 throw new KeyNotFoundException($"No se encontró un empleado con el ID {empleadoId}");
             }
 
-            return empleado;
+            //Transformamos Empleado a EmpleadoResponseDTO
+            var _empleadoDTO = new EmpleadoResponseDTO
+            {
+                Id = empleado.Id,
+                Nombre = empleado.Nombre,
+                Usuario = empleado.Usuario,
+                Sector = empleado.Sectore.Descripcion,
+                Rol = empleado.Role.Descripcion
+            };
+
+            return _empleadoDTO;
         }
         catch (Exception ex)
         {
@@ -50,14 +71,23 @@ public class EmpleadoService : IEmpleadoService
         }
     }
 
-    public async Task<Empleado> Add(Empleado empleado)
+    public async Task<EmpleadoResponseDTO> Add(EmpleadoRequestDTO empleado)
     {
         try
         {
-            await _unitOfWork.EmpleadoRepository.Add(empleado);
+            var _empleado = new Empleado
+            {
+                Nombre = empleado.Nombre,
+                Usuario = empleado.Usuario,
+                Password = empleado.Password,
+                IdSector = empleado.IdSector,
+                RoleId = empleado.RoleId
+            };
+            await _unitOfWork.EmpleadoRepository.Add(_empleado);
             await _unitOfWork.Save();  // Save the changes to the database
 
-            return empleado;  // Return the newly added employee
+            return await Get(_empleado.Id);
+
         }
         catch (Exception ex)
         {
@@ -68,14 +98,57 @@ public class EmpleadoService : IEmpleadoService
         }
     }
 
-    public async Task<Empleado> Update(int id, Empleado empleado)
+    public async Task<EmpleadoResponseDTO> Update(int id, EmpleadoRequestDTO empleado)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var _empleado = new Empleado
+            {
+                Nombre = empleado.Nombre,
+                Usuario = empleado.Usuario,
+                Password = empleado.Password,
+                IdSector = empleado.IdSector,
+                RoleId = empleado.RoleId,
+                Id = id
+            };
+            _unitOfWork.EmpleadoRepository.Edit(_empleado);
+            await _unitOfWork.Save();  // Save the changes to the database
+
+            return await Get(_empleado.Id);
+
+        }
+        catch (Exception ex)
+        {
+            // Optionally log the exception
+            // _logger.LogError(ex, "An error occurred while adding the employee.");
+
+            throw new ApplicationException("An error occurred while adding the employee.", ex);
+        }
     }
 
-    public Task<bool> Delete(int empleadoId)
+    public async Task<bool> Delete(int empleadoId)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var _empleado = await _unitOfWork.EmpleadoRepository.GetId(empleadoId);
+
+            if (_empleado != null)
+            {
+                _unitOfWork.EmpleadoRepository.Delete(_empleado);
+                await _unitOfWork.Save();  // Save the changes to the database
+
+                return true;  // Si se guarda correctamente
+            }
+
+            return false;  // Si el empleado no fue encontrado
+        }
+        catch (Exception ex)
+        {
+            // Optionally log the exception
+            // _logger.LogError(ex, "An error occurred while adding the employee.");
+
+            throw new ApplicationException("An error occurred while adding the employee.", ex);
+        }
     }
 
     public async Task<HorariosIngresoSistemaDTO> GetHorariosIngresoSistema(int empleadoId, DateTime fechaInicio,

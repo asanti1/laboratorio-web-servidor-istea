@@ -1,23 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace laboratorio_web_api_istea.DAL.Models;
 
-public partial class Empleado
+public class Empleado : ClaseBase
 {
-    public int IdEmpleado { get; set; }
+    [Required] public string Nombre { get; set; }
 
-    public string Nombre { get; set; } = null!;
+    [Required] public string Usuario { get; set; }
 
-    public string Usuario { get; set; } = null!;
+    [Required] public string Password { get; set; }
+    [ForeignKey(nameof(Sectore))] public int IdSector { get; set; }
 
-    public string Password { get; set; } = null!;
+    [ForeignKey(nameof(Role))] public int RoleId { get; set; }
 
-    public int IdSector { get; set; }
+    public virtual Sectore Sectore { get; set; } = null!;
 
-    public int IdRol { get; set; }
-
-    public virtual Role IdRolNavigation { get; set; } = null!;
-
-    public virtual Sectore IdSectorNavigation { get; set; } = null!;
+    public virtual Role Role { get; set; } = null!;
 }

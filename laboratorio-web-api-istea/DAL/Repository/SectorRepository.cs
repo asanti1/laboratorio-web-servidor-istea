@@ -8,7 +8,6 @@ namespace laboratorio_web_api_istea.DAL.Repository
     {
         public SectorRepository(RestauranteContext context) : base(context)
         {
-
         }
 
         async Task<Sectore> ISectorRepository.GetSectorByDescription(string description)
@@ -16,8 +15,6 @@ namespace laboratorio_web_api_istea.DAL.Repository
             try
             {
                 var newSector = await _context.Sectores
-                    .Include(s => s.Empleados)  // Incluye Empleados
-                    .Include(s => s.Productos)  // Incluye Productos
                     .FirstOrDefaultAsync(s => s.Descripcion == description);
 
                 return newSector;
@@ -27,7 +24,5 @@ namespace laboratorio_web_api_istea.DAL.Repository
                 return null;
             }
         }
-
-
     }
 }

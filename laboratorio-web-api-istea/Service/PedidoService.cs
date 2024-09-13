@@ -1,6 +1,7 @@
 using laboratorio_web_api_istea.DAL;
 using laboratorio_web_api_istea.DAL.Enum;
 using laboratorio_web_api_istea.DAL.Models;
+using laboratorio_web_api_istea.DTO.Pedido;
 using laboratorio_web_api_istea.Service.Interface;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,33 +10,29 @@ namespace laboratorio_web_api_istea.Service;
 public class PedidoService : IPedidoService
 {
     private readonly IUnitOfWork _unitOfWork;
+
     public PedidoService(IUnitOfWork unitOfWork)
     {
         _unitOfWork = unitOfWork;
     }
+
     public async Task<List<Pedido>> GetPedidos()
     {
-        try
-        {
-            return await _unitOfWork.PedidoRepository.GetAll();
-        }
-        catch
-        {
-            throw new ApplicationException("An error occurred while retrieving employees.");
-        }
+        return await _unitOfWork.PedidoRepository.GetAll();
     }
 
     public async Task<List<Pedido>> GetPedidosPorSector(string sector)
     {
-        try {
+        try
+        {
             // Retrieve the sector by its description
             var newSector = await _unitOfWork.SectorRepository.GetSectorByDescription(sector);
 
-        if (newSector == null)
-        {
-            // Handle the case where the sector is not found
-            return new List<Pedido>(); // or throw an exception depending on your requirements
-        }
+            if (newSector == null)
+            {
+                // Handle the case where the sector is not found
+                return new List<Pedido>(); // or throw an exception depending on your requirements
+            }
 
             // Retrieve pedidos associated with the sector
             var pedidos = await _unitOfWork.PedidoRepository.GetPedidosBySector(newSector);
@@ -50,7 +47,7 @@ public class PedidoService : IPedidoService
             throw new ApplicationException("An error occurred while retrieving pedidos by sector.", ex);
         }
     }
-    
+
     public async Task<List<Pedido>> GetPedidosNoEntregadosATiempo()
     {
         try
@@ -89,57 +86,16 @@ public class PedidoService : IPedidoService
 
     public async Task<Pedido> GetPedidoPorId(int id)
     {
-        try
-        {
-            if (id != null)
-            {
-                return await _unitOfWork.PedidoRepository.GetId(id);
-            }
-            throw new Exception("El id no puede ser nulo4"); 
-        }
-        catch
-        {
-            throw new ApplicationException("An error occurred while retrieving the order by ID.");
-        }
+        return await _unitOfWork.PedidoRepository.GetId(id);
     }
 
-    public async Task<Pedido> CambiarEstadoPedido(int id, string estado)
+    public async Task<Pedido> CambiarEstadoPedido(int id, int estado)
     {
-        try {
-
-            Pedido pedido = await _unitOfWork.PedidoRepository.GetId(id);
-
-            if (pedido == null)
-            {
-                throw new KeyNotFoundException("Order not found.");
-            }
-
-            pedido.IdEstado =Convert.ToInt16(estado);
-
-            await _unitOfWork.PedidoRepository.Add(pedido);
-            var result = await _unitOfWork.Save();
-
-            return pedido;
-        } 
-        catch
-        {
-            throw new ApplicationException("An error occurred while changing the order status.");
-        }
+        return await _unitOfWork.PedidoRepository.CambiarEstadoPedido(id, estado);
     }
 
-    public async Task<Pedido> AddPedido(Pedido pedido)
+    public async Task<Pedido> AddPedido(PedidoPostDTO pedido)
     {
-        try
-        {
-            await _unitOfWork.PedidoRepository.Add(pedido);
-            var result = await _unitOfWork.Save();
-
-            Pedido pedidoCreado = await _unitOfWork.PedidoRepository.GetId(pedido.IdPedido);
-            return pedidoCreado;
-        }
-        catch
-        {
-            throw new ApplicationException("An error occurred while adding a new order.");
-        }
+        return await _unitOfWork.PedidoRepository.AddPedido(pedido);
     }
 }
