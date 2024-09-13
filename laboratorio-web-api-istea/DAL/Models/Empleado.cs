@@ -17,4 +17,6 @@ public class Empleado : ClaseBase
     [ForeignKey(nameof(Role))] public int RoleId { get; set; }
 
     public virtual Sectore Sectore { get; set; } = null!;
+
+    public virtual Role Role { get; set; } = null!;
 }

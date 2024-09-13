@@ -5,10 +5,10 @@ namespace laboratorio_web_api_istea.Service.Interface;
 
 public interface IEmpleadoService
 {
-    Task<List<Empleado>> GetAll();
-    Task<Empleado> Get(int empleadoId);
-    Task<Empleado> Add(Empleado empleado);
-    Task<Empleado> Update(int id, Empleado empleado);
+    Task<List<EmpleadoResponseDTO>> GetAll();
+    Task<EmpleadoResponseDTO> Get(int empleadoId);
+    Task<EmpleadoResponseDTO> Add(EmpleadoRequestDTO empleado);
+    Task<EmpleadoResponseDTO> Update(int id, EmpleadoRequestDTO empleado);
     Task<bool> Delete(int empleadoId);
 
     Task<HorariosIngresoSistemaDTO> GetHorariosIngresoSistema(int empleadoId, DateTime fechaInicio,

@@ -18,7 +18,7 @@ public class EmpleadoController : ControllerBase
     }
 
     [HttpGet("GetEmpleados")]
-    public async Task<ActionResult<List<Empleado>>> GetAll()
+    public async Task<ActionResult<List<EmpleadoResponseDTO>>> GetAll()
     {
         var emp = await _empleadoService.GetAll();
         if (emp.Count == 0) return NotFound();
@@ -26,21 +26,21 @@ public class EmpleadoController : ControllerBase
     }
 
     [HttpGet("GetEmpleadoPorId/{id}")]
-    public async Task<ActionResult<Empleado>> Get(int empleadoId)
+    public async Task<ActionResult<EmpleadoResponseDTO>> Get(int id)
     {
-        var emp = await _empleadoService.Get(empleadoId);
+        var emp = await _empleadoService.Get(id);
         if (emp == null) return NotFound();
         return Ok(emp);
     }
 
     [HttpPost("AgregarEmpleado")]
-    public async Task<ActionResult<Empleado>> Add(Empleado empleado)
+    public async Task<ActionResult<EmpleadoResponseDTO>> Add(EmpleadoRequestDTO empleado)
     {
         return await _empleadoService.Add(empleado);
     }
 
     [HttpPut("EditarEmpleado/{id}")]
-    public async Task<ActionResult<Empleado>> Update([FromRoute] int id, [FromBody] Empleado empleado)
+    public async Task<ActionResult<EmpleadoResponseDTO>> Update([FromRoute] int id, EmpleadoRequestDTO empleado)
     {
         var emp = await _empleadoService.Update(id, empleado);
         if (emp != null)
@@ -52,9 +52,9 @@ public class EmpleadoController : ControllerBase
     }
 
     [HttpDelete("EliminarEmpleado/{id}")]
-    public async Task<ActionResult> Delete([FromRoute] int empleadoId)
+    public async Task<ActionResult> Delete([FromRoute] int id)
     {
-        bool success= await _empleadoService.Delete(empleadoId);
+        bool success= await _empleadoService.Delete(id);
         if (!success) return NotFound();
         return NoContent();
     }

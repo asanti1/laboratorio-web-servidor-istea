@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using laboratorio_web_api_istea.DAL;
 
@@ -11,9 +12,11 @@ using laboratorio_web_api_istea.DAL;
 namespace laboratorio_web_api_istea.Migrations
 {
     [DbContext(typeof(RestauranteContext))]
-    partial class RestauranteContextModelSnapshot : ModelSnapshot
+    [Migration("20240911205952_InitialCreate")]
+    partial class InitialCreate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -612,7 +615,7 @@ namespace laboratorio_web_api_istea.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("laboratorio_web_api_istea.DAL.Models.Role", "Role")
+                    b.HasOne("laboratorio_web_api_istea.DAL.Models.Role", null)
                         .WithMany("Empleados")
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
