@@ -24,7 +24,7 @@ namespace laboratorio_web_api_istea.DAL.Repository
                 {
                     NombreCliente = c.NombreCliente,
                     NombreMesa = c.Mesa.Nombre,
-                    Productos = c.Pedidos.Select(p => new PedidoEnComandaGetDTO
+                    Pedidos = c.Pedidos.Select(p => new PedidoEnComandaGetDTO
                     {
                         NombreProducto = p.Producto.Descripcion,
                         Precio = p.Producto.Precio.ToString("F2"),
@@ -32,6 +32,11 @@ namespace laboratorio_web_api_istea.DAL.Repository
                     }).ToList()
                 })
                 .FirstOrDefaultAsync();
+
+            if (comandaDto == null)
+            {
+                throw new KeyNotFoundException($"No se encontró una comanda con el ID {idComanda}");
+            }
 
             return comandaDto;
         }

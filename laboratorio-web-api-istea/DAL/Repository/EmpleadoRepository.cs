@@ -1,4 +1,5 @@
-﻿using laboratorio_web_api_istea.DAL.Models;
+﻿using AutoMapper;
+using laboratorio_web_api_istea.DAL.Models;
 using laboratorio_web_api_istea.DAL.Repository.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -6,28 +7,59 @@ namespace laboratorio_web_api_istea.DAL.Repository
 {
     public class EmpleadoRepository : Repository<Empleado>, IEmpleadoRepository
     {
-        protected readonly RestauranteContext context;
+        private readonly RestauranteContext _context;
+        private readonly IMapper _mapper;
 
-        public EmpleadoRepository(RestauranteContext context) : base(context)
+
+        public async Task<Empleado> AddEmpleado(Empleado empleado)
         {
-            this.context = context;
+            _context.Empleados.Add(empleado);
+            await _context.SaveChangesAsync();
+            return empleado;
+        }
+
+        public async Task BorrarEmpleado(int empleadoId)
+        {
+            var empleado = await _context.Empleados.FindAsync(empleadoId);
+            if (empleado == null) throw new Exception("Empleado no encontrado");
+
+            _context.Empleados.Remove(empleado);
+            await _context.SaveChangesAsync();
+        }
+
+
+        public EmpleadoRepository(RestauranteContext context, IMapper mapper) : base(context)
+        {
+            _context = context;
+            _mapper = mapper;
+        }
+
+        public async Task<Empleado> Update(Empleado emp)
+        {
+            var empleado = await _context.Empleados.FindAsync(emp.Id);
+            if (empleado == null) throw new Exception("No se encontro esa entidad");
+
+            _mapper.Map(emp, empleado);
+
+            await _context.SaveChangesAsync();
+            return empleado;
         }
 
         public Task<List<Empleado>> GetAllEmpleados()
         {
-            return context.Empleados
-                    .Include(e => e.Sectore)
-                    .Include(e => e.Role)
-                    .ToListAsync();
+            return _context.Empleados
+                .Include(e => e.Sectore)
+                .Include(e => e.Role)
+                .ToListAsync();
         }
 
-        public Task<Empleado> GetEmpleadoById(int id)
+        public Task<Empleado?> GetEmpleadoById(int id)
         {
-            return context.Empleados
-            .Include(e => e.Sectore)
-            .Include(e => e.Role)
-            .Where(e => e.Id == id)
-            .FirstOrDefaultAsync();
+            return _context.Empleados
+                .Include(e => e.Sectore)
+                .Include(e => e.Role)
+                .Where(e => e.Id == id)
+                .FirstOrDefaultAsync();
         }
     }
 }

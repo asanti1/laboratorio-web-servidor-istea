@@ -54,9 +54,15 @@ public class EmpleadoController : ControllerBase
     [HttpDelete("EliminarEmpleado/{id}")]
     public async Task<ActionResult> Delete([FromRoute] int id)
     {
-        bool success= await _empleadoService.Delete(id);
-        if (!success) return NotFound();
-        return NoContent();
+        try
+        {
+            await _empleadoService.Delete(id);
+            return NoContent();
+        }
+        catch (Exception ex)
+        {
+            return NotFound(ex.Message);
+        }
     }
 
     //TODO: AGREGAR EL DTO PARA MANEJAR EL BODY CON FECHAS
@@ -64,7 +70,7 @@ public class EmpleadoController : ControllerBase
     public async Task<ActionResult<HorariosIngresoSistemaDTO>> GetHorariosIngresoSistema(
         [FromRoute] int empleadoId,
         DateTime fechaInicio,
-        [FromBody] DateTime fechaFin = new DateTime())
+        [FromBody] DateTime fechaFin = new())
     {
         var horarios = await _empleadoService.GetHorariosIngresoSistema(empleadoId, fechaInicio, fechaFin);
         if (horarios == null) return NotFound();
