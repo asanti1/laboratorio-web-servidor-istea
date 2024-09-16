@@ -1,41 +1,35 @@
+using AutoMapper;
 using laboratorio_web_api_istea.DAL;
 using laboratorio_web_api_istea.DAL.Models;
 using laboratorio_web_api_istea.DTO.Empleado;
 using laboratorio_web_api_istea.Service.Interface;
-using Microsoft.EntityFrameworkCore;
 
 namespace laboratorio_web_api_istea.Service;
 
-//TODO: Capa repositorio con o sin unit of work TBD.
 public class EmpleadoService : IEmpleadoService
-    
+
 {
     private readonly IUnitOfWork _unitOfWork;
-    public EmpleadoService(IUnitOfWork unitOfWork)
+    private readonly IMapper _mapper;
+
+    public EmpleadoService(IUnitOfWork unitOfWork, IMapper mapper)
     {
         _unitOfWork = unitOfWork;
+        _mapper = mapper;
     }
+
     public async Task<List<EmpleadoResponseDTO>> GetAll()
     {
         try
         {
             var _empleados = await _unitOfWork.EmpleadoRepository.GetAllEmpleados();
-             
-            var _empleadosDTO = _empleados.Select(empleado => new EmpleadoResponseDTO
-            {
-                Id = empleado.Id,
-                Nombre = empleado.Nombre,
-                Usuario = empleado.Usuario,
-                Sector = empleado.Sectore.Descripcion,
-                Rol = empleado.Role.Descripcion
-            }).ToList();
 
-            return _empleadosDTO;
+            return _mapper.Map<List<EmpleadoResponseDTO>>(_empleados);
         }
         catch
         {
             throw new ApplicationException("An error occurred while retrieving employees.");
-        } 
+        }
     }
 
     public async Task<EmpleadoResponseDTO> Get(int empleadoId)
@@ -71,84 +65,32 @@ public class EmpleadoService : IEmpleadoService
         }
     }
 
-    public async Task<EmpleadoResponseDTO> Add(EmpleadoRequestDTO empleado)
+    public async Task<EmpleadoResponseDTO> Add(EmpleadoRequestDTO emp)
     {
         try
         {
-            var _empleado = new Empleado
-            {
-                Nombre = empleado.Nombre,
-                Usuario = empleado.Usuario,
-                Password = empleado.Password,
-                IdSector = empleado.IdSector,
-                RoleId = empleado.RoleId
-            };
-            await _unitOfWork.EmpleadoRepository.Add(_empleado);
-            await _unitOfWork.Save();  // Save the changes to the database
+            var empleado = _mapper.Map<Empleado>(emp);
 
-            return await Get(_empleado.Id);
+            empleado = await _unitOfWork.EmpleadoRepository.AddEmpleado(empleado);
 
+            return _mapper.Map<EmpleadoResponseDTO>(empleado);
         }
         catch (Exception ex)
         {
-            // Optionally log the exception
-            // _logger.LogError(ex, "An error occurred while adding the employee.");
-
             throw new ApplicationException("An error occurred while adding the employee.", ex);
         }
     }
 
-    public async Task<EmpleadoResponseDTO> Update(int id, EmpleadoRequestDTO empleado)
+    public async Task<EmpleadoResponseDTO> Update(int id, EmpleadoRequestDTO emp)
     {
-        try
-        {
-            var _empleado = new Empleado
-            {
-                Nombre = empleado.Nombre,
-                Usuario = empleado.Usuario,
-                Password = empleado.Password,
-                IdSector = empleado.IdSector,
-                RoleId = empleado.RoleId,
-                Id = id
-            };
-            _unitOfWork.EmpleadoRepository.Edit(_empleado);
-            await _unitOfWork.Save();  // Save the changes to the database
-
-            return await Get(_empleado.Id);
-
-        }
-        catch (Exception ex)
-        {
-            // Optionally log the exception
-            // _logger.LogError(ex, "An error occurred while adding the employee.");
-
-            throw new ApplicationException("An error occurred while adding the employee.", ex);
-        }
+        Empleado empleado = _mapper.Map<Empleado>(emp);
+        Empleado empleadoUpdate = await _unitOfWork.EmpleadoRepository.Update(empleado);
+        return _mapper.Map<Empleado, EmpleadoResponseDTO>(empleadoUpdate);
     }
 
-    public async Task<bool> Delete(int empleadoId)
+    public async Task Delete(int empleadoId)
     {
-        try
-        {
-            var _empleado = await _unitOfWork.EmpleadoRepository.GetId(empleadoId);
-
-            if (_empleado != null)
-            {
-                _unitOfWork.EmpleadoRepository.Delete(_empleado);
-                await _unitOfWork.Save();  // Save the changes to the database
-
-                return true;  // Si se guarda correctamente
-            }
-
-            return false;  // Si el empleado no fue encontrado
-        }
-        catch (Exception ex)
-        {
-            // Optionally log the exception
-            // _logger.LogError(ex, "An error occurred while adding the employee.");
-
-            throw new ApplicationException("An error occurred while adding the employee.", ex);
-        }
+        await _unitOfWork.EmpleadoRepository.BorrarEmpleado(empleadoId);
     }
 
     public async Task<HorariosIngresoSistemaDTO> GetHorariosIngresoSistema(int empleadoId, DateTime fechaInicio,

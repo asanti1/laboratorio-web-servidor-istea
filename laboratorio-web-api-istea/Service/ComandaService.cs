@@ -1,15 +1,15 @@
+using AutoMapper;
 using laboratorio_web_api_istea.DAL;
 using laboratorio_web_api_istea.DAL.Models;
 using laboratorio_web_api_istea.DTO.Comanda;
 using laboratorio_web_api_istea.Service.Interface;
-using Microsoft.EntityFrameworkCore;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace laboratorio_web_api_istea.Service;
 
 public class ComandaService : IComandaService
 {
     private readonly IUnitOfWork _unitOfWork;
+    private readonly IMapper _mapper;
 
     public ComandaService(IUnitOfWork unitOfWork)
     {
@@ -27,19 +27,23 @@ public class ComandaService : IComandaService
 
         return comanda;
     }
+
     public async Task<ComandaGetDTO> ObtenerComandaPorId(int idComanda)
     {
-        var comanda = await _unitOfWork.ComandaRepository.ObtenerComandaPorId(idComanda);
-
-        if (comanda == null)
+        try
         {
-            throw new KeyNotFoundException($"No se encontró una comanda con el ID {idComanda}");
-        }
+            var comanda = await _unitOfWork.ComandaRepository.ObtenerComandaPorId(idComanda);
 
-        return comanda;
+            return comanda;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
     }
-    
-    
+
+
     public async Task<Comanda> Add(ComandaPostDTO comanda)
     {
         return await _unitOfWork.ComandaRepository.AgregarComanda(comanda);

@@ -9,9 +9,10 @@ public interface IEmpleadoService
     Task<EmpleadoResponseDTO> Get(int empleadoId);
     Task<EmpleadoResponseDTO> Add(EmpleadoRequestDTO empleado);
     Task<EmpleadoResponseDTO> Update(int id, EmpleadoRequestDTO empleado);
-    Task<bool> Delete(int empleadoId);
+    Task Delete(int empleadoId);
 
     Task<HorariosIngresoSistemaDTO> GetHorariosIngresoSistema(int empleadoId, DateTime fechaInicio,
         DateTime fechaFin = new DateTime());
+
     Task<OperacionesPorEmpleadoDTO> GetOperacionesPorEmpleado();
 }

@@ -35,6 +35,8 @@ builder.Services.AddScoped<IUnitOfWork, UnitOfWork>(x => new UnitOfWork(x.GetReq
     x.GetRequiredService<IPedidoRepository>(),
     x.GetRequiredService<ISectorRepository>()
 ));
+builder.Services.AddAutoMapper(typeof(Program));
+
 
 var app = builder.Build();
 

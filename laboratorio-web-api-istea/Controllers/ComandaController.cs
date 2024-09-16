@@ -1,6 +1,5 @@
 using laboratorio_web_api_istea.DAL.Models;
 using laboratorio_web_api_istea.DTO.Comanda;
-using laboratorio_web_api_istea.Service;
 using laboratorio_web_api_istea.Service.Interface;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,14 +17,16 @@ public class ComandaController : ControllerBase
     }
 
     [HttpGet("Buscar/{idComanda}")]
-    public async Task<ActionResult<ComandaGetDTO>> Get([FromRoute] int idComanda)
+    public async Task<ActionResult<Comanda>> Get([FromRoute] int idComanda)
     {
         try
         {
             var comanda = await _comandaService.ObtenerComandaPorId(idComanda);
+
+
             return Ok(comanda);
         }
-        catch (KeyNotFoundException ex)
+        catch (Exception ex)
         {
             return NotFound(new { Message = ex.Message });
         }
@@ -34,7 +35,7 @@ public class ComandaController : ControllerBase
     [HttpPost("Agregar")]
     public async Task<ActionResult<Comanda>> Add([FromBody] ComandaPostDTO comanda)
     {
-        var comandaCreada = await _comandaService.Add(comanda); 
+        var comandaCreada = await _comandaService.Add(comanda);
         return Created(String.Empty, comandaCreada);
     }
 
@@ -49,11 +50,12 @@ public class ComandaController : ControllerBase
     public async Task<ActionResult> Delete([FromRoute] int idComanda)
     {
         bool success = await _comandaService.Delete(idComanda);
-        
+
         if (success)
         {
             return NoContent();
         }
+
         return NotFound();
     }
 }

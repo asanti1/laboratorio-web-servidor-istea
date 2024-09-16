@@ -6,11 +6,11 @@ namespace laboratorio_web_api_istea.DTO.Empleado
 {
     public class EmpleadoRequestDTO
     {
-        public required string Nombre { get; set; }
+        public string Nombre { get; set; }
 
-        public required string Usuario { get; set; }
+        public string Usuario { get; set; }
 
-        public required string Password { get; set; }
+        public  string Password { get; set; }
         public int IdSector { get; set; }
 
         public int RoleId { get; set; }

@@ -12,5 +12,5 @@ public class ComandaGetDTO
 {
     public string NombreCliente { get; set; }
     public string NombreMesa { get; set; }
-    public List<PedidoEnComandaGetDTO> Productos { get; set; }
+    public List<PedidoEnComandaGetDTO> Pedidos { get; set; }
 }

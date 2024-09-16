@@ -21,7 +21,7 @@ public class PedidoController : ControllerBase
     public async Task<ActionResult<List<Pedido>>> GetPedidos()
     {
         var pedidos = await _pedidoService.GetPedidos();
-        if (pedidos == null) return NotFound();
+        if (pedidos == null) return Ok(new List<Pedido>());
         return Ok(pedidos);
     }
 
