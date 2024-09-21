@@ -15,4 +15,5 @@ public interface IEmpleadoService
         DateTime fechaFin = new DateTime());
 
     Task<OperacionesPorEmpleadoDTO> GetOperacionesPorEmpleado();
+    Task<EmpleadoResponseDTO?> GetEmpleadoByUsuarioPass(string user, string pass);
 }

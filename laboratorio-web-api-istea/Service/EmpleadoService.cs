@@ -70,9 +70,14 @@ public class EmpleadoService : IEmpleadoService
         try
         {
             var empleado = _mapper.Map<Empleado>(emp);
+            var existeEmpleado = await _unitOfWork.EmpleadoRepository.GetEmpleadoByUsuario(emp.Usuario);
+
+            if(existeEmpleado != null)
+            {
+                throw new ApplicationException("El usuario del empleado ya existe");
+            }
 
             empleado = await _unitOfWork.EmpleadoRepository.AddEmpleado(empleado);
-
             return _mapper.Map<EmpleadoResponseDTO>(empleado);
         }
         catch (Exception ex)
@@ -102,5 +107,22 @@ public class EmpleadoService : IEmpleadoService
     public async Task<OperacionesPorEmpleadoDTO> GetOperacionesPorEmpleado()
     {
         throw new NotImplementedException();
+    }
+
+    public async Task<EmpleadoResponseDTO?> GetEmpleadoByUsuarioPass(string user, string pass)
+    {
+        var empleado = await _unitOfWork.EmpleadoRepository.GetEmpleadoByUsuario(user);
+        if (empleado == null)
+        {
+            //Usuario No Existe
+            return null;
+        }
+        else if (empleado.Password != pass)
+        {
+            //Pass erroneo
+            return null;
+        }
+
+        return _mapper.Map<EmpleadoResponseDTO>(empleado); ;
     }
 }

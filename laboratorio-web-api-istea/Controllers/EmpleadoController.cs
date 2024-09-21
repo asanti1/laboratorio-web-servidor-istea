@@ -1,6 +1,7 @@
 using laboratorio_web_api_istea.DAL.Models;
 using laboratorio_web_api_istea.DTO.Empleado;
 using laboratorio_web_api_istea.Service.Interface;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace laboratorio_web_api_istea.Controllers;
@@ -18,6 +19,7 @@ public class EmpleadoController : ControllerBase
     }
 
     [HttpGet("GetEmpleados")]
+
     public async Task<ActionResult<List<EmpleadoResponseDTO>>> GetAll()
     {
         var emp = await _empleadoService.GetAll();
