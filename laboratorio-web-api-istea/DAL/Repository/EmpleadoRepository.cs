@@ -61,5 +61,14 @@ namespace laboratorio_web_api_istea.DAL.Repository
                 .Where(e => e.Id == id)
                 .FirstOrDefaultAsync();
         }
+
+        public Task<Empleado?> GetEmpleadoByUsuario(string usuario)
+        {
+            return _context.Empleados
+                .Include(e => e.Sectore)
+                .Include(e => e.Role)
+                .Where(e => e.Usuario == usuario)
+                .FirstOrDefaultAsync();
+        }
     }
 }

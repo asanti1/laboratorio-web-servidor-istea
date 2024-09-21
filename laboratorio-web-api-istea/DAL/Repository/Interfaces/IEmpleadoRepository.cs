@@ -10,5 +10,6 @@ namespace laboratorio_web_api_istea.DAL.Repository.Interfaces
         Task<Empleado> Update(Empleado emp);
         Task<Empleado> AddEmpleado(Empleado empleado);
         Task BorrarEmpleado(int empleadoId);
+        Task<Empleado> GetEmpleadoByUsuario(string usuario);
     }
 }
