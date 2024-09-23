@@ -1,3 +1,4 @@
+using System.Security.Principal;
 using laboratorio_web_api_istea.DAL.Models;
 using laboratorio_web_api_istea.DTO.Empleado;
 using laboratorio_web_api_istea.Service.Interface;
@@ -19,7 +20,6 @@ public class EmpleadoController : ControllerBase
     }
 
     [HttpGet("GetEmpleados")]
-
     public async Task<ActionResult<List<EmpleadoResponseDTO>>> GetAll()
     {
         var emp = await _empleadoService.GetAll();
@@ -27,6 +27,7 @@ public class EmpleadoController : ControllerBase
         return Ok(emp);
     }
 
+    [Authorize(Roles = "Socio")]
     [HttpGet("GetEmpleadoPorId/{id}")]
     public async Task<ActionResult<EmpleadoResponseDTO>> Get(int id)
     {

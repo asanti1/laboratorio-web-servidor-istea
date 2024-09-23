@@ -23,6 +23,7 @@ namespace WebApI_Preparcial_II.Controllers
             _empleadoService = empleadoService;
             _configuration = configuration;
         }
+
         [HttpPost]
         [AllowAnonymous]
         public async Task<ActionResult<object>> Login(LoginRequestDto login)
@@ -32,12 +33,9 @@ namespace WebApI_Preparcial_II.Controllers
             {
                 var claims = new[]
                 {
-                    new Claim(JwtRegisteredClaimNames.Sub,_configuration["Jwt:Subject"]),
+                    new Claim(JwtRegisteredClaimNames.Sub, _configuration["Jwt:Subject"]),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                    new Claim(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToString()),
-                    new Claim("UserId", userEntity.Id.ToString()),
-                    new Claim("DisplayName", userEntity.Nombre),
-                    new Claim("UserName", userEntity.Usuario),
+                    new Claim(ClaimTypes.Role, userEntity.Rol)
                 };
                 var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
                 var signIn = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
