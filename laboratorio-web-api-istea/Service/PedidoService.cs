@@ -67,41 +67,73 @@ public class PedidoService : IPedidoService
     }
 
 
-    public async Task<List<Pedido>> GetMenosPedido()
+    public async Task<List<PedidoResponseDTO>> GetMenosPedido()
     {
         try
         {
-            return await _unitOfWork.PedidoRepository.GetMenosPedido();
+            // Obtiene la lista de pedidos
+            var pedidos = await _unitOfWork.PedidoRepository.GetMenosPedido();
+
+            // Mapea la lista de pedidos a una lista de PedidoResponseDTO
+            var pedidosResponseDTO = _mapper.Map<List<PedidoResponseDTO>>(pedidos);
+
+            return pedidosResponseDTO;
         }
-        catch
+        catch (Exception ex)
         {
-            throw new ApplicationException("An error occurred while retrieving the least ordered products.");
+            throw new ApplicationException($"An error occurred while retrieving the least ordered products: {ex.Message}");
         }
     }
 
-    public async Task<List<Pedido>> GetMasPedido()
+    public async Task<List<PedidoResponseDTO>> GetMasPedido()
     {
         try
         {
-            return await _unitOfWork.PedidoRepository.GetMasPedido();
+            // Se obtiene la lista de pedidos más solicitados
+            var pedidos = await _unitOfWork.PedidoRepository.GetMasPedido();
+
+            // Mapeamos la lista de pedidos a PedidoResponseDTO
+            var pedidosResponseDTO = _mapper.Map<List<PedidoResponseDTO>>(pedidos);
+
+            return pedidosResponseDTO;
         }
-        catch
+        catch (Exception ex)
         {
-            throw new ApplicationException("An error occurred while retrieving the most ordered products.");
+            throw new ApplicationException($"An error occurred while retrieving the most ordered products: {ex.Message}");
         }
     }
 
-    public async Task<Pedido> GetPedidoPorId(int id)
+    public async Task<PedidoResponseDTO> GetPedidoPorId(int id)
     {
-        return await _unitOfWork.PedidoRepository.GetId(id);
+        try
+        {
+            // Obtenemos el pedido por ID
+            var pedido = await _unitOfWork.PedidoRepository.GetId(id);
+
+            // Verificamos si el pedido es nulo
+            if (pedido == null)
+            {
+                throw new KeyNotFoundException("Order not found.");
+            }
+
+            // Mapeamos el pedido a PedidoResponseDTO
+            var pedidoResponseDTO = _mapper.Map<PedidoResponseDTO>(pedido);
+
+            return pedidoResponseDTO;
+        }
+        catch (Exception ex)
+        {
+            throw new ApplicationException($"An error occurred while retrieving the order: {ex.Message}");
+        }
     }
+
 
     public async Task<PedidoResponseDTO> CambiarEstadoPedido(int id, int estado)
     {
-        // Llama al repositorio para cambiar el estado del pedido
+        // Llamamos al repositorio para cambiar el estado del pedido
         var pedidoResponseDTO = await _unitOfWork.PedidoRepository.CambiarEstadoPedido(id, estado);
 
-        // Devuelve el DTO
+        // Nos devuelve el DTO
         return pedidoResponseDTO;
     }
 

@@ -45,24 +45,55 @@ namespace laboratorio_web_api_istea.DAL.Repository
             }
         }
 
-        public async Task<List<Pedido>> GetMenosPedido()
+        public async Task<List<PedidoResponseDTO>> GetMenosPedido()
         {
-            return await _context.Pedidos
-                .GroupBy(p => p.ProductoId)
-                .OrderBy(g => g.Count())
-                .Select(g => g.First())
-                .ToListAsync();
+            try
+            {
+                var pedidos = await _context.Pedidos
+                    .Include(p => p.EstadosPedido)
+                    .Include(p => p.Comanda)
+                        .ThenInclude(c => c.Mesa)
+                    .Include(p => p.Producto)
+                    .GroupBy(p => p.ProductoId)
+                    .OrderBy(g => g.Count())
+                    .Select(g => g.First())
+                    .ToListAsync();
+
+                var pedidosResponseDTO = _mapper.Map<List<PedidoResponseDTO>>(pedidos);
+
+                return pedidosResponseDTO;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
         }
 
-        public async Task<List<Pedido>> GetMasPedido()
+        public async Task<List<PedidoResponseDTO>> GetMasPedido()
         {
-            return await _context.Pedidos
-                .GroupBy(p => p.ProductoId)
-                .OrderByDescending(g => g.Count())
-                .Select(g => g.First())
-                .ToListAsync();
-        }
+            try
+            {
+                // obtengo los pedidos agrupados y ordenados por la cantidad de productos, incluyendo las relaciones necesarias
+                var pedidos = await _context.Pedidos
+                    .Include(p => p.EstadosPedido)
+                    .Include(p => p.Comanda)
+                        .ThenInclude(c => c.Mesa)
+                    .Include(p => p.Producto)
+                    .GroupBy(p => p.ProductoId)
+                    .OrderByDescending(g => g.Count()) // Ordenamos por los productos más pedidos
+                    .Select(g => g.First()) // Seleccionamos el primer pedido de cada grupo
+                    .ToListAsync();
 
+                // Acá implemente AutoMapper para mapear la lista de 'Pedido' a 'PedidoResponseDTO'
+                var pedidosResponseDTO = _mapper.Map<List<PedidoResponseDTO>>(pedidos);
+
+                return pedidosResponseDTO;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
 
         public async Task<List<Pedido>> GetPedidosBySector(Sectore sector)
         {
@@ -115,7 +146,6 @@ namespace laboratorio_web_api_istea.DAL.Repository
                 throw new ApplicationException("An error occurred while changing the order status.", ex);
             }
         }
-
 
         public async Task<Pedido> AddPedido(Pedido pedido)
         {

@@ -8,9 +8,9 @@ public interface IPedidoService
     Task<List<PedidoResponseDTO>> GetPedidos();
     Task<List<PedidoResponseDTO>> GetPedidosPorSector(string sector);
     Task<List<PedidoResponseDTO>> GetPedidosNoEntregadosATiempo();
-    Task<List<Pedido>> GetMenosPedido();
-    Task<List<Pedido>> GetMasPedido();
-    Task<Pedido> GetPedidoPorId(int id);
+    Task<List<PedidoResponseDTO>> GetMenosPedido();
+    Task<List<PedidoResponseDTO>> GetMasPedido();
+    Task<PedidoResponseDTO> GetPedidoPorId(int id);
     Task<PedidoResponseDTO> CambiarEstadoPedido(int id, int estado);
     Task<Pedido> AddPedido(PedidoPostDTO pedido);
 }

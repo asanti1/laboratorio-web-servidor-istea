@@ -43,7 +43,7 @@ public class PedidoController : ControllerBase
     }
 
     [HttpGet("GetPedidoPorId/{id}")]
-    public async Task<ActionResult<Pedido>> GetPedidoPorId([FromRoute] int id)
+    public async Task<ActionResult<PedidoResponseDTO>> GetPedidoPorId(int id)
     {
         var pedido = await _pedidoService.GetPedidoPorId(id);
         if (pedido == null) return NotFound();
@@ -78,14 +78,14 @@ public class PedidoController : ControllerBase
     }
 
     [HttpGet("GetMenosPedido")]
-    public async Task<ActionResult<Pedido>> GetMenosPedido()
+    public async Task<ActionResult<PedidoResponseDTO>> GetMenosPedido()
     {
         var pedidos = await _pedidoService.GetMenosPedido();
         return Ok(pedidos);
     }
 
     [HttpGet("GetMasPedido")]
-    public async Task<ActionResult<Pedido>> GetMasPedido()
+    public async Task<ActionResult<PedidoResponseDTO>> GetMasPedido()
     {
         var pedidos = await _pedidoService.GetMasPedido();
         return Ok(pedidos);
