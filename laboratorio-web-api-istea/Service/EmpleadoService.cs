@@ -86,9 +86,10 @@ public class EmpleadoService : IEmpleadoService
         }
     }
 
-    public async Task<EmpleadoResponseDTO> Update(int id, EmpleadoRequestDTO emp)
+    public async Task<EmpleadoResponseDTO> Update(int id, EmpleadoUpdateRequestDTO emp)
     {
         Empleado empleado = _mapper.Map<Empleado>(emp);
+        empleado.Id = id;
         Empleado empleadoUpdate = await _unitOfWork.EmpleadoRepository.Update(empleado);
         return _mapper.Map<Empleado, EmpleadoResponseDTO>(empleadoUpdate);
     }

@@ -26,8 +26,7 @@ public class EmpleadoController : ControllerBase
         if (emp.Count == 0) return NotFound();
         return Ok(emp);
     }
-
-    [Authorize(Roles = "Socio")]
+    
     [HttpGet("GetEmpleadoPorId/{id}")]
     public async Task<ActionResult<EmpleadoResponseDTO>> Get(int id)
     {
@@ -36,6 +35,7 @@ public class EmpleadoController : ControllerBase
         return Ok(emp);
     }
 
+    [Authorize(Roles = "Socio")]
     [HttpPost("AgregarEmpleado")]
     public async Task<ActionResult<EmpleadoResponseDTO>> Add(EmpleadoRequestDTO empleado)
     {
@@ -43,7 +43,7 @@ public class EmpleadoController : ControllerBase
     }
 
     [HttpPut("EditarEmpleado/{id}")]
-    public async Task<ActionResult<EmpleadoResponseDTO>> Update([FromRoute] int id, EmpleadoRequestDTO empleado)
+    public async Task<ActionResult<EmpleadoResponseDTO>> Update([FromRoute] int id, EmpleadoUpdateRequestDTO empleado)
     {
         var emp = await _empleadoService.Update(id, empleado);
         if (emp != null)

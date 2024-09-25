@@ -6,10 +6,12 @@ namespace laboratorio_web_api_istea.DAL.Repository.Interfaces
     public interface IPedidoRepository : IRepository<Pedido>
     {
         Task<List<Pedido>> GetPedidoByEstado(int idEstado);
+        Task<List<Pedido>> GetAllPedidos();        
         Task<List<Pedido>> GetMenosPedido();
         Task<List<Pedido>> GetMasPedido();
         Task<List<Pedido>> GetPedidosBySector(Sectore sector);
-        Task<Pedido> AddPedido(PedidoPostDTO pedido);
-        Task<Pedido> CambiarEstadoPedido(int idPedido, int estado);
+        Task<Pedido> AddPedido(Pedido pedido);
+        Task<PedidoResponseDTO> CambiarEstadoPedido(int idPedido, int estado);
+
     }
 }

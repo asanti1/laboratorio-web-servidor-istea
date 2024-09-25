@@ -1,6 +1,8 @@
+using AutoMapper;
 using laboratorio_web_api_istea.DAL;
 using laboratorio_web_api_istea.DAL.Enum;
 using laboratorio_web_api_istea.DAL.Models;
+using laboratorio_web_api_istea.DTO.Empleado;
 using laboratorio_web_api_istea.DTO.Pedido;
 using laboratorio_web_api_istea.Service.Interface;
 using Microsoft.EntityFrameworkCore;
@@ -10,55 +12,60 @@ namespace laboratorio_web_api_istea.Service;
 public class PedidoService : IPedidoService
 {
     private readonly IUnitOfWork _unitOfWork;
+    private readonly IMapper _mapper;
 
-    public PedidoService(IUnitOfWork unitOfWork)
+    public PedidoService(IUnitOfWork unitOfWork, IMapper mapper)
     {
         _unitOfWork = unitOfWork;
+        _mapper = mapper;
     }
 
-    public async Task<List<Pedido>> GetPedidos()
+    public async Task<List<PedidoResponseDTO>> GetPedidos()
     {
-        return await _unitOfWork.PedidoRepository.GetAll();
+        var pedidosEntity = await _unitOfWork.PedidoRepository.GetAllPedidos();
+        List<PedidoResponseDTO> pedidosDTO = _mapper.Map<List<PedidoResponseDTO>>(pedidosEntity);
+        return pedidosDTO;
     }
 
-    public async Task<List<Pedido>> GetPedidosPorSector(string sector)
+
+    public async Task<List<PedidoResponseDTO>> GetPedidosPorSector(string sector)
     {
         try
         {
-            // Retrieve the sector by its description
             var newSector = await _unitOfWork.SectorRepository.GetSectorByDescription(sector);
 
             if (newSector == null)
             {
-                // Handle the case where the sector is not found
-                return new List<Pedido>(); // or throw an exception depending on your requirements
+                return new List<PedidoResponseDTO>();
             }
 
-            // Retrieve pedidos associated with the sector
             var pedidos = await _unitOfWork.PedidoRepository.GetPedidosBySector(newSector);
 
-            return pedidos;
+            var pedidosDTO = _mapper.Map<List<PedidoResponseDTO>>(pedidos);
+
+            return pedidosDTO;
         }
         catch (Exception ex)
         {
-            // Optionally log the exception
-            // _logger.LogError(ex, "An error occurred while retrieving pedidos by sector.");
-
             throw new ApplicationException("An error occurred while retrieving pedidos by sector.", ex);
         }
     }
 
-    public async Task<List<Pedido>> GetPedidosNoEntregadosATiempo()
+    public async Task<List<PedidoResponseDTO>> GetPedidosNoEntregadosATiempo()
     {
         try
         {
-            return await _unitOfWork.PedidoRepository.GetPedidoByEstado((int)EstadoPedidoEnum.LISTO_PARA_SERVIR);
+            var pedidos = await _unitOfWork.PedidoRepository.GetPedidoByEstado((int)EstadoPedidoEnum.LISTO_PARA_SERVIR);
+            var pedidosResponseDTO = _mapper.Map<List<PedidoResponseDTO>>(pedidos);
+
+            return pedidosResponseDTO;
         }
         catch
         {
             throw new ApplicationException("An error occurred while retrieving orders.");
         }
     }
+
 
     public async Task<List<Pedido>> GetMenosPedido()
     {
@@ -89,13 +96,19 @@ public class PedidoService : IPedidoService
         return await _unitOfWork.PedidoRepository.GetId(id);
     }
 
-    public async Task<Pedido> CambiarEstadoPedido(int id, int estado)
+    public async Task<PedidoResponseDTO> CambiarEstadoPedido(int id, int estado)
     {
-        return await _unitOfWork.PedidoRepository.CambiarEstadoPedido(id, estado);
+        // Llama al repositorio para cambiar el estado del pedido
+        var pedidoResponseDTO = await _unitOfWork.PedidoRepository.CambiarEstadoPedido(id, estado);
+
+        // Devuelve el DTO
+        return pedidoResponseDTO;
     }
 
-    public async Task<Pedido> AddPedido(PedidoPostDTO pedido)
+
+    public async Task<Pedido> AddPedido(PedidoPostDTO pedidoDTO)
     {
+        Pedido pedido = _mapper.Map<Pedido>(pedidoDTO);
         return await _unitOfWork.PedidoRepository.AddPedido(pedido);
     }
 }

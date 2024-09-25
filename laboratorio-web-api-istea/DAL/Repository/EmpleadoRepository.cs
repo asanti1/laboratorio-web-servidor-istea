@@ -10,6 +10,11 @@ namespace laboratorio_web_api_istea.DAL.Repository
         private readonly RestauranteContext _context;
         private readonly IMapper _mapper;
 
+        public EmpleadoRepository(RestauranteContext context, IMapper mapper) : base(context)
+        {
+            _context = context;
+            _mapper = mapper;
+        }
 
         public async Task<Empleado> AddEmpleado(Empleado empleado)
         {
@@ -28,18 +33,14 @@ namespace laboratorio_web_api_istea.DAL.Repository
         }
 
 
-        public EmpleadoRepository(RestauranteContext context, IMapper mapper) : base(context)
-        {
-            _context = context;
-            _mapper = mapper;
-        }
-
         public async Task<Empleado> Update(Empleado emp)
         {
             var empleado = await _context.Empleados.FindAsync(emp.Id);
             if (empleado == null) throw new Exception("No se encontro esa entidad");
 
-            _mapper.Map(emp, empleado);
+            empleado.Nombre = emp.Nombre;
+            empleado.IdSector = emp.IdSector;
+            empleado.RoleId = emp.RoleId;
 
             await _context.SaveChangesAsync();
             return empleado;

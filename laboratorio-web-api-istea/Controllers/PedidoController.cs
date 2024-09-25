@@ -18,15 +18,16 @@ public class PedidoController : ControllerBase
     }
 
     [HttpGet("GetPedidos")]
-    public async Task<ActionResult<List<Pedido>>> GetPedidos()
+    public async Task<ActionResult<List<PedidoResponseDTO>>> GetPedidos()
     {
         var pedidos = await _pedidoService.GetPedidos();
-        if (pedidos == null) return Ok(new List<Pedido>());
+        if (pedidos == null) return Ok(new List<PedidoResponseDTO>());
         return Ok(pedidos);
+
     }
 
-    [HttpGet("GetPedidos/{idSector}")]
-    public async Task<ActionResult<List<Pedido>>> GetPedidosPorSector([FromRoute] string sector)
+    [HttpGet("GetPedidos/{sector}")]
+    public async Task<ActionResult<List<PedidoResponseDTO>>> GetPedidosPorSector(string sector)
     {
         var pedidos = await _pedidoService.GetPedidosPorSector(sector);
         if (pedidos == null) return NotFound();
@@ -34,7 +35,7 @@ public class PedidoController : ControllerBase
     }
 
     [HttpGet("GetPedidosRetrasados")]
-    public async Task<ActionResult<List<Pedido>>> GetPedidosNoEntregadosATiempo()
+    public async Task<ActionResult<List<PedidoResponseDTO>>> GetPedidosNoEntregadosATiempo()
     {
         var pedidos = await _pedidoService.GetPedidosNoEntregadosATiempo();
         if (pedidos == null) return NotFound();
@@ -50,11 +51,23 @@ public class PedidoController : ControllerBase
     }
 
     [HttpPut("CambiarEstadoPedido/{pedidoId}")]
-    public ActionResult<Pedido> CambiarEstadoPedido([FromRoute] int pedidoId, [FromBody] int estado)
+    public async Task<ActionResult<PedidoResponseDTO>> CambiarEstadoPedido([FromRoute] int pedidoId, [FromBody] int estado)
     {
-        var pedido = _pedidoService.CambiarEstadoPedido(pedidoId, estado);
-        if (pedido == null) return NotFound();
-        return Created(string.Empty, pedido);
+        try
+        {
+            var pedido = await _pedidoService.CambiarEstadoPedido(pedidoId, estado);
+            if (pedido == null) return NotFound("Pedido no encontrado.");
+
+            return Ok(pedido);
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(ex.Message);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, "Ocurrió un error al procesar la solicitud.");
+        }
     }
 
     [HttpPost("AddPedido")]

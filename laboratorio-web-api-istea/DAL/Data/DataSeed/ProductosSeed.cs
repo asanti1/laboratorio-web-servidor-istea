@@ -28,7 +28,13 @@ public class ProductosSeed : IEntityTypeConfiguration<Producto>
             new Producto() { Id = 17, Descripcion = "Vino Malbec", Stock = 130, SectorId = 1, Precio = 2300 },
             new Producto() { Id = 18, Descripcion = "Cerveza Porter", Stock = 280, SectorId = 2, Precio = 900 },
             new Producto() { Id = 19, Descripcion = "Torta de Chocolate", Stock = 30, SectorId = 3, Precio = 1600 },
-            new Producto() { Id = 20, Descripcion = "Muffin de Arándanos", Stock = 50, SectorId = 4, Precio = 400 }
+            new Producto() { Id = 20, Descripcion = "Muffin de Arándanos", Stock = 50, SectorId = 4, Precio = 400 },
+            new Producto() { Id = 21, Descripcion = "Milanesa a caballo", Stock = 40, SectorId = 3, Precio = 4800 },
+            new Producto() { Id = 22, Descripcion = "Hamburguesa de garbanzo", Stock = 20, SectorId = 3, Precio = 3500 },
+            new Producto() { Id = 23, Descripcion = "Cerveza Corona", Stock = 70, SectorId = 2, Precio = 2500 },
+            new Producto() { Id = 24, Descripcion = "Daikiri", Stock = 15, SectorId = 1, Precio = 3700 }
+
+
         );
     }
 }

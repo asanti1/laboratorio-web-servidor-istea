@@ -14,9 +14,9 @@ public class Pedido : ClaseBase
 
     public int Cantidad { get; set; }
     public DateTime FechaCreacion { get; set; }
-
     public DateTime? FechaFinalizacion { get; set; }
 
     public virtual Producto Producto { get; set; } = null!;
     public virtual Comanda Comanda { get; set; } = null!;
+    public virtual EstadosPedido EstadosPedido { get; set; } = null!;
 }
