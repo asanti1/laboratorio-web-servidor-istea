@@ -17,12 +17,11 @@ public class ComandaController : ControllerBase
     }
 
     [HttpGet("Buscar/{idComanda}")]
-    public async Task<ActionResult<Comanda>> Get([FromRoute] int idComanda)
+    public async Task<ActionResult<ComandaResponseDTO>> Get([FromRoute] int idComanda)
     {
         try
         {
             var comanda = await _comandaService.ObtenerComandaPorId(idComanda);
-
 
             return Ok(comanda);
         }
@@ -33,16 +32,37 @@ public class ComandaController : ControllerBase
     }
 
     [HttpPost("Agregar")]
-    public async Task<ActionResult<Comanda>> Add([FromBody] ComandaPostDTO comanda)
+    public async Task<ActionResult<ComandaResponseDTO>> Add([FromBody] ComandaPostDTO comanda)
     {
         var comandaCreada = await _comandaService.Add(comanda);
+
         return Created(String.Empty, comandaCreada);
     }
 
     [HttpPut("ActualizarComanda/{idComanda}")]
-    public Task<ActionResult<Comanda>> Update([FromRoute] int idComanda, [FromBody] Comanda comanda)
+    public async Task<ActionResult<ComandaResponseDTO>> Update([FromRoute] int idComanda, [FromBody] ComandaPostDTO comandaPostDto) // Cambiado a ComandaPostDTO
     {
-        throw new NotImplementedException();
+        if (comandaPostDto == null)
+        {
+            return BadRequest("Comanda cannot be null."); // Retornar 400 si es nulo
+        }
+
+        try
+        {
+            // Llamar al servicio para actualizar la comanda
+            var comandaActualizada = await _comandaService.Update(idComanda, comandaPostDto); // Cambiado a comandaPostDto
+
+            if (comandaActualizada == null)
+            {
+                return NotFound(); // Retornar 404 si no se encuentra la comanda
+            }
+
+            return Ok(comandaActualizada); // Retornar la comanda actualizada en formato DTO
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, "Internal server error: " + ex.Message); // Manejo de errores
+        }
     }
 
     //socio

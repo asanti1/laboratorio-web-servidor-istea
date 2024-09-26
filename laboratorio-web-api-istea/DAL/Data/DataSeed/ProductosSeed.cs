@@ -33,8 +33,6 @@ public class ProductosSeed : IEntityTypeConfiguration<Producto>
             new Producto() { Id = 22, Descripcion = "Hamburguesa de garbanzo", Stock = 20, SectorId = 3, Precio = 3500 },
             new Producto() { Id = 23, Descripcion = "Cerveza Corona", Stock = 70, SectorId = 2, Precio = 2500 },
             new Producto() { Id = 24, Descripcion = "Daikiri", Stock = 15, SectorId = 1, Precio = 3700 }
-
-
         );
     }
 }

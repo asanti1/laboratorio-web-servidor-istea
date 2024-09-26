@@ -45,7 +45,7 @@ namespace laboratorio_web_api_istea.DAL.Repository
             }
         }
 
-        public async Task<List<PedidoResponseDTO>> GetMenosPedido()
+        public async Task<List<Pedido>> GetMenosPedido()
         {
             try
             {
@@ -59,9 +59,7 @@ namespace laboratorio_web_api_istea.DAL.Repository
                     .Select(g => g.First())
                     .ToListAsync();
 
-                var pedidosResponseDTO = _mapper.Map<List<PedidoResponseDTO>>(pedidos);
-
-                return pedidosResponseDTO;
+                return pedidos;
             }
             catch (Exception ex)
             {
@@ -69,7 +67,7 @@ namespace laboratorio_web_api_istea.DAL.Repository
             }
         }
 
-        public async Task<List<PedidoResponseDTO>> GetMasPedido()
+        public async Task<List<Pedido>> GetMasPedido()
         {
             try
             {
@@ -84,10 +82,9 @@ namespace laboratorio_web_api_istea.DAL.Repository
                     .Select(g => g.First()) // Seleccionamos el primer pedido de cada grupo
                     .ToListAsync();
 
-                // Acá implemente AutoMapper para mapear la lista de 'Pedido' a 'PedidoResponseDTO'
-                var pedidosResponseDTO = _mapper.Map<List<PedidoResponseDTO>>(pedidos);
 
-                return pedidosResponseDTO;
+
+                return pedidos;
             }
             catch (Exception ex)
             {
@@ -115,7 +112,7 @@ namespace laboratorio_web_api_istea.DAL.Repository
             }
         }
 
-        public async Task<PedidoResponseDTO> CambiarEstadoPedido(int idPedido, int estado)
+        public async Task<Pedido> CambiarEstadoPedido(int idPedido, int estado)
         {
             try
             {
@@ -136,10 +133,7 @@ namespace laboratorio_web_api_istea.DAL.Repository
 
                 await _context.SaveChangesAsync();
 
-                // Mapear el pedido actualizado a PedidoResponseDTO
-                var pedidoDto = _mapper.Map<PedidoResponseDTO>(pedido);
-
-                return pedidoDto; // Devuelve el PedidoResponseDTO
+                return pedido; // Devuelve el Pedido
             }
             catch (Exception ex)
             {
@@ -151,9 +145,19 @@ namespace laboratorio_web_api_istea.DAL.Repository
         {
             try
             {
+                // Verificamos si la comanda existe
                 var comanda = await _context.Comandas.FindAsync(pedido.ComandaId);
-                Console.WriteLine("here");
-                if (comanda == null) throw new Exception("Comanda not found with id: " + pedido.ComandaId);
+                if (comanda == null) throw new Exception($"Comanda not found with id: {pedido.ComandaId}");
+
+                // Verificamos si el producto existe
+                var producto = await _context.Productos.FindAsync(pedido.ProductoId);
+                if (producto == null) throw new Exception($"Producto not found with id: {pedido.ProductoId}");
+
+                // Verificamos si el estado del pedido existe
+                var estadoPedido = await _context.EstadosPedidos.FindAsync(pedido.EstadosPedidoId);
+                if (estadoPedido == null) throw new Exception($"EstadoPedido not found with id: {pedido.EstadosPedidoId}");
+
+                // Creamos el nuevo pedido
                 Pedido nuevoPedido = new Pedido()
                 {
                     EstadosPedidoId = pedido.EstadosPedidoId,
@@ -164,12 +168,14 @@ namespace laboratorio_web_api_istea.DAL.Repository
                     ComandaId = comanda.Id,
                 };
 
-                _context.Add(nuevoPedido);
+                _context.Pedidos.Add(nuevoPedido);
                 await _context.SaveChangesAsync();
                 return nuevoPedido;
             }
-            catch
+            catch (Exception ex)
             {
+                // Logueamos el error para poder identificar qué está fallando
+                Console.WriteLine($"Error: {ex.Message}");
                 throw new ApplicationException("An error occurred while adding a new order.");
             }
         }

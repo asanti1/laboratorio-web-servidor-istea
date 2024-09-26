@@ -131,10 +131,13 @@ public class PedidoService : IPedidoService
     public async Task<PedidoResponseDTO> CambiarEstadoPedido(int id, int estado)
     {
         // Llamamos al repositorio para cambiar el estado del pedido
-        var pedidoResponseDTO = await _unitOfWork.PedidoRepository.CambiarEstadoPedido(id, estado);
+        var pedido = await _unitOfWork.PedidoRepository.CambiarEstadoPedido(id, estado);
+
+        // Mapear el pedido actualizado a PedidoResponseDTO
+        var pedidoDto = _mapper.Map<PedidoResponseDTO>(pedido);
 
         // Nos devuelve el DTO
-        return pedidoResponseDTO;
+        return pedidoDto;
     }
 
 
