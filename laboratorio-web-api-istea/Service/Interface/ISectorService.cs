@@ -4,7 +4,8 @@ namespace laboratorio_web_api_istea.Service.Interface;
 
 public interface ISectorService
 {
-    Task<OperacionesPorSectorDTO> GetOperacionesPorSector();
-    
-    Task<OperacionesPorSectorPorEmpleadoDTO> GetOperacionesPorSectorPorEmpleado();
+    Task<List<OperacionesPorSectorDTO>> GetOperacionesPorSector(string sectorDescripcion);
+
+    Task<List<OperacionesPorSectorYEmpleadoDTO>> GetOperacionesPorSectorPorEmpleado();
+    Task<List<OperacionesPorSectorPorEmpleadoDTO>> GetOperacionesPorSectorPorEmpleado(string sectorDescripcion);
 }
