@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using laboratorio_web_api_istea.DAL.Enum;
 using laboratorio_web_api_istea.DAL.Models;
 using laboratorio_web_api_istea.DAL.Repository.Interfaces;
 using laboratorio_web_api_istea.DTO.Pedido;
@@ -33,6 +34,24 @@ namespace laboratorio_web_api_istea.DAL.Repository
                 return null;
             }
         }
+
+        public async Task<List<Pedido>> GetPedidosListos() {
+            try
+            {
+                return await _context.Pedidos
+                .Where(p => p.EstadosPedidoId == (int) EstadoPedidoEnum.LISTO_PARA_SERVIR)
+                .Include(p => p.EstadosPedido)
+                .Include(p => p.Comanda)
+                 .ThenInclude(c => c.Mesa)
+                .Include(p => p.Producto)
+                .ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
         public async Task<List<Pedido>> GetPedidoByEstado(int idEstado)
         {
             try
@@ -112,16 +131,37 @@ namespace laboratorio_web_api_istea.DAL.Repository
             }
         }
 
-        public async Task<Pedido> CambiarEstadoPedido(int idPedido, int estado)
+        public async Task<Pedido> GetPedidoPorId(int idPedido)
+        {
+            try
+            {
+                var pedidos = await _context.Pedidos
+                .Where(p => p.Id == idPedido)
+                .Include(p => p.EstadosPedido)
+                .Include(p => p.Comanda)
+                 .ThenInclude(c => c.Mesa)
+                .Include(p => p.Producto)
+                .FirstOrDefaultAsync();
+
+                return pedidos;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
+        public async Task<Pedido> CambiarEstadoPedido(int idPedido, string sector, int estado)
         {
             try
             {
                 var pedido = await _context.Pedidos
-                    .Include(p => p.Producto)
-                    .Include(p => p.Comanda)
-                    .ThenInclude(c => c.Mesa)
-                    .Include(p => p.EstadosPedido)
-                    .FirstOrDefaultAsync(p => p.Id == idPedido);
+                .Include(p => p.Comanda)
+                .ThenInclude(c => c.Mesa)
+                .Include(p => p.Producto)
+                .ThenInclude(pr => pr.Sector)
+                .Include(p => p.EstadosPedido)
+                .FirstOrDefaultAsync(p => p.Id == idPedido && p.Producto.Sector.Descripcion == sector);  // Filtra por ID y sector del empleado
 
                 if (pedido == null)
                 {
@@ -132,6 +172,8 @@ namespace laboratorio_web_api_istea.DAL.Repository
                 pedido.EstadosPedidoId = estado;
 
                 await _context.SaveChangesAsync();
+
+                pedido = await this.GetPedidoPorId(idPedido);
 
                 return pedido; // Devuelve el Pedido
             }

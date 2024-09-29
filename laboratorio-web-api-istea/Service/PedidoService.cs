@@ -1,5 +1,6 @@
 using AutoMapper;
 using laboratorio_web_api_istea.DAL;
+using laboratorio_web_api_istea.DAL.Entities;
 using laboratorio_web_api_istea.DAL.Enum;
 using laboratorio_web_api_istea.DAL.Models;
 using laboratorio_web_api_istea.DTO.Empleado;
@@ -27,11 +28,52 @@ public class PedidoService : IPedidoService
         return pedidosDTO;
     }
 
+    public string ObtenerSectorPorRol(string userRole)
+    {
+        return userRole switch
+        {
+            RolesUsuarioConst.Bartender => "Barra de Tragos y Vinos",
+            RolesUsuarioConst.Cervecero => "Barra de Choperas de Cerveza Artesanal",
+            RolesUsuarioConst.Cocinero => "Cocina",
+            RolesUsuarioConst.Mozo => "", 
+        };
+    }
+
+    public async Task<List<PedidoResponseDTO>> GetPedidosListos() {
+        var pedidosEntity = await _unitOfWork.PedidoRepository.GetPedidosListos();
+        List<PedidoResponseDTO> pedidosDTO = _mapper.Map<List<PedidoResponseDTO>>(pedidosEntity);
+        return pedidosDTO;
+    }
 
     public async Task<List<PedidoResponseDTO>> GetPedidosPorSector(string sector)
     {
         try
         {
+            var newSector = await _unitOfWork.SectorRepository.GetSectorByDescription(sector);
+
+            if (newSector == null)
+            {
+                return new List<PedidoResponseDTO>();
+            }
+
+            var pedidos = await _unitOfWork.PedidoRepository.GetPedidosBySector(newSector);
+
+            var pedidosDTO = _mapper.Map<List<PedidoResponseDTO>>(pedidos);
+
+            return pedidosDTO;
+        }
+        catch (Exception ex)
+        {
+            throw new ApplicationException("An error occurred while retrieving pedidos by sector.", ex);
+        }
+    }
+
+    public async Task<List<PedidoResponseDTO>> GetPedidosPorRol(string rol)
+    {
+        try
+        {
+            var sector = ObtenerSectorPorRol(rol);
+
             var newSector = await _unitOfWork.SectorRepository.GetSectorByDescription(sector);
 
             if (newSector == null)
@@ -128,10 +170,10 @@ public class PedidoService : IPedidoService
     }
 
 
-    public async Task<PedidoResponseDTO> CambiarEstadoPedido(int id, int estado)
+    public async Task<PedidoResponseDTO> CambiarEstadoPedido(int id, string sector, int estado)
     {
         // Llamamos al repositorio para cambiar el estado del pedido
-        var pedido = await _unitOfWork.PedidoRepository.CambiarEstadoPedido(id, estado);
+        var pedido = await _unitOfWork.PedidoRepository.CambiarEstadoPedido(id, sector, estado);
 
         // Mapear el pedido actualizado a PedidoResponseDTO
         var pedidoDto = _mapper.Map<PedidoResponseDTO>(pedido);

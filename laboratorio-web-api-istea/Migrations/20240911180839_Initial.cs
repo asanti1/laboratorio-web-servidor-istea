@@ -244,8 +244,8 @@ namespace laboratorio_web_api_istea.Migrations
                     { 1, 1, "Carlos", "12345", 1, "carlos" },
                     { 2, 2, "Roberto", "12345", 2, "roberto" },
                     { 3, 3, "Maria", "12345", 3, "maria" },
-                    { 4, 3, "Juana", "12345", 4, "juana" },
-                    { 5, 4, "Marcelo", "12345", 5, "marcelo" }
+                    { 4, 5, "Juana", "12345", 4, "juana" },
+                    { 5, 6, "Marcelo", "12345", 5, "marcelo" }
                 });
 
             migrationBuilder.InsertData(
