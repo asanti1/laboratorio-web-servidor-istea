@@ -31,11 +31,20 @@ public class MesaRepository : Repository<Mesa>, IMesaRepository
 
     public async Task CambiarEstado(string nombreMesa, int idEstado)
     {
-        var mesa = await _context.Mesas.FirstOrDefaultAsync(m => m.Nombre == nombreMesa);
-        if (mesa != null)
+        try
         {
-            mesa.EstadosMesaId = idEstado;
-            await _context.SaveChangesAsync();
+            //Obtengo la mesa a la cual quiero cambiar el estado
+            var mesa = await _context.Mesas.FirstOrDefaultAsync(m => m.Nombre == nombreMesa);
+            if (mesa != null)
+            {
+                //Si existe le cambio el estado. 
+                mesa.EstadosMesaId = idEstado;
+                await _context.SaveChangesAsync();
+            }
+        }
+        catch (Exception ex)
+        {
+            throw new ApplicationException("Error al actualizar una mesa.", ex);
         }
     }
 }
