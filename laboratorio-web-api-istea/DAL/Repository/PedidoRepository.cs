@@ -170,6 +170,10 @@ namespace laboratorio_web_api_istea.DAL.Repository
 
                 // Cambiar el estado del pedido
                 pedido.EstadosPedidoId = estado;
+                if(estado == (int)EstadoPedidoEnum.LISTO_PARA_SERVIR)
+                {
+                    pedido.FechaFinalizacion = DateTime.Now;
+                }
 
                 await _context.SaveChangesAsync();
 

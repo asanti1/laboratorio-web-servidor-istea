@@ -39,7 +39,8 @@ public class PedidoController : ControllerBase
 
         var pedidos = await _pedidoService.GetPedidosPorRol(userRol);
         if (pedidos == null) return NotFound();
-        return Ok(pedidos);
+        var pedidosPendientes = pedidos?.Where(p => p.EstadosPedido != "Listo para servir").ToList();
+        return Ok(pedidosPendientes);
     }
 
     [Authorize(Roles = RolesUsuarioConst.Mozo)]
