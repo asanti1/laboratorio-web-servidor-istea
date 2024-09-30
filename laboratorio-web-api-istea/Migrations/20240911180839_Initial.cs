@@ -362,6 +362,7 @@ namespace laboratorio_web_api_istea.Migrations
                 column: "IdEmpleado");
         }
 
+
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
