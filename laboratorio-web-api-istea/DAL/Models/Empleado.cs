@@ -12,7 +12,7 @@ public class Empleado : ClaseBase
     [Required] public string Usuario { get; set; }
 
     [Required] public string Password { get; set; }
-    [ForeignKey(nameof(Sectore))] public int IdSector { get; set; }
+    [ForeignKey(nameof(Sectore))] public int SectorId { get; set; }
 
     [ForeignKey(nameof(Role))] public int RoleId { get; set; }
 

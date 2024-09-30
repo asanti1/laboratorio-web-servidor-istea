@@ -28,10 +28,10 @@ public class PedidoController : ControllerBase
         var pedidos = await _pedidoService.GetPedidos();
         if (pedidos == null) return Ok(new List<PedidoResponseDTO>());
         return Ok(pedidos);
-
     }
-
-    [Authorize(Roles = RolesUsuarioConst.Cocinero + "," + RolesUsuarioConst.Cervecero + "," + RolesUsuarioConst.Bartender)]
+    
+    [Authorize(Roles =
+        RolesUsuarioConst.Cocinero + "," + RolesUsuarioConst.Cervecero + "," + RolesUsuarioConst.Bartender)]
     [HttpGet("GetPedidosPendientes")]
     public async Task<ActionResult<List<PedidoResponseDTO>>> GetPedidosPendientes()
     {
@@ -76,7 +76,8 @@ public class PedidoController : ControllerBase
         return Ok(pedido);
     }
 
-    [Authorize(Roles = RolesUsuarioConst.Cocinero + "," + RolesUsuarioConst.Cervecero + "," + RolesUsuarioConst.Bartender)]
+    [Authorize(Roles =
+        RolesUsuarioConst.Cocinero + "," + RolesUsuarioConst.Cervecero + "," + RolesUsuarioConst.Bartender)]
     [HttpPut("CambiarEstadoPedidoEnPreparacion/{pedidoId}")]
     public async Task<ActionResult<PedidoResponseDTO>> CambiarEstadoPedidoEnPreparacion([FromRoute] int pedidoId)
     {
@@ -87,7 +88,9 @@ public class PedidoController : ControllerBase
 
             var sectorDescription = _pedidoService.ObtenerSectorPorRol(userRol);
 
-            var pedido = await _pedidoService.CambiarEstadoPedido(pedidoId, sectorDescription, (int) EstadoPedidoEnum.EN_PREPARACION);
+            var pedido =
+                await _pedidoService.CambiarEstadoPedido(pedidoId, sectorDescription,
+                    (int)EstadoPedidoEnum.EN_PREPARACION);
             if (pedido == null) return NotFound("Pedido no encontrado.");
 
             return Ok(pedido);
@@ -98,11 +101,13 @@ public class PedidoController : ControllerBase
         }
         catch (Exception ex)
         {
-            return StatusCode(500, "Ocurrió un error al procesar la solicitud.");
+            Console.WriteLine(ex);
+            return StatusCode(500, "Ocurriï¿½ un error al procesar la solicitud.");
         }
     }
 
-    [Authorize(Roles = RolesUsuarioConst.Cocinero + "," + RolesUsuarioConst.Cervecero + "," + RolesUsuarioConst.Bartender)]
+    [Authorize(Roles =
+        RolesUsuarioConst.Cocinero + "," + RolesUsuarioConst.Cervecero + "," + RolesUsuarioConst.Bartender)]
     [HttpPut("CambiarEstadoPedidoListoParaServir/{pedidoId}")]
     public async Task<ActionResult<PedidoResponseDTO>> CambiarEstadoPedidoListoParaServir([FromRoute] int pedidoId)
     {
@@ -111,7 +116,8 @@ public class PedidoController : ControllerBase
             var userRol = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
             var sectorDescription = _pedidoService.ObtenerSectorPorRol(userRol);
 
-            var pedido = await _pedidoService.CambiarEstadoPedido(pedidoId, sectorDescription, (int)EstadoPedidoEnum.LISTO_PARA_SERVIR);
+            var pedido = await _pedidoService.CambiarEstadoPedido(pedidoId, sectorDescription,
+                (int)EstadoPedidoEnum.LISTO_PARA_SERVIR);
             if (pedido == null) return NotFound("Pedido no encontrado.");
 
             return Ok(pedido);
@@ -122,7 +128,7 @@ public class PedidoController : ControllerBase
         }
         catch (Exception ex)
         {
-            return StatusCode(500, "Ocurrió un error al procesar la solicitud.");
+            return StatusCode(500, "Ocurriï¿½ un error al procesar la solicitud.");
         }
     }
 
@@ -147,4 +153,7 @@ public class PedidoController : ControllerBase
         var pedidos = await _pedidoService.GetMasPedido();
         return Ok(pedidos);
     }
+    
+    //TODO: FALTA ENDPOINT CLIENTE ENTRA CON NUMERO MESA + NRO PEDIDO
+   
 }

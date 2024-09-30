@@ -32,7 +32,7 @@ namespace laboratorio_web_api_istea.DAL.Repository
                 var resultado = await _context.Pedidos
                  .Join(_context.Productos, pe => pe.ProductoId, pr => pr.Id, (pe, pr) => new { Pedido = pe, Producto = pr })
                  .Join(_context.Sectores, combined => combined.Producto.SectorId, s => s.Id, (combined, sector) => new { combined.Pedido, combined.Producto, Sector = sector })
-                 .Join(_context.Empleados, combined => combined.Producto.SectorId, e => e.IdSector, (combined, empleado) => new { combined.Pedido, combined.Producto, combined.Sector, Empleado = empleado })
+                 .Join(_context.Empleados, combined => combined.Producto.SectorId, e => e.SectorId, (combined, empleado) => new { combined.Pedido, combined.Producto, combined.Sector, Empleado = empleado })
                  .Join(_context.EstadosPedidos, combined => combined.Pedido.EstadosPedidoId, ep => ep.Id, (combined, estadoPedido) => new { combined.Pedido, combined.Producto, combined.Sector, combined.Empleado, EstadoPedido = estadoPedido })
                  .GroupBy(g => g.Sector.Descripcion) // Agrupar por la descripción del sector
                  .Select(group => new OperacionesPorSector
@@ -57,7 +57,7 @@ namespace laboratorio_web_api_istea.DAL.Repository
                 var resultado = await _context.Pedidos
                     .Where(pe => pe.Producto.Sector.Descripcion.Contains(descriptionSector)) // Filtro por la descripción del sector
                     .Join(_context.Productos, pe => pe.ProductoId, pr => pr.Id, (pe, pr) => new { Pedido = pe, Producto = pr })
-                    .Join(_context.Empleados, combined => combined.Producto.SectorId, e => e.IdSector, (combined, empleado) => new { combined.Pedido, Empleado = empleado })
+                    .Join(_context.Empleados, combined => combined.Producto.SectorId, e => e.SectorId, (combined, empleado) => new { combined.Pedido, Empleado = empleado })
                     .Join(_context.EstadosPedidos, combined => combined.Pedido.EstadosPedidoId, ep => ep.Id, (combined, estadoPedido) => new { combined.Pedido, combined.Empleado, EstadoPedido = estadoPedido })
                     .GroupBy(g => g.Empleado.Nombre)
                     .Select(group => new OperacionesPorSectorPorEmpleado
@@ -82,7 +82,7 @@ namespace laboratorio_web_api_istea.DAL.Repository
                 var resultado = await _context.Pedidos
                     .Join(_context.Productos, pe => pe.ProductoId, pr => pr.Id, (pe, pr) => new { Pedido = pe, Producto = pr })
                     .Join(_context.Sectores, combined => combined.Producto.SectorId, s => s.Id, (combined, sector) => new { combined.Pedido, combined.Producto, Sector = sector })
-                    .Join(_context.Empleados, combined => combined.Producto.SectorId, e => e.IdSector, (combined, empleado) => new { combined.Pedido, combined.Producto, combined.Sector, Empleado = empleado })
+                    .Join(_context.Empleados, combined => combined.Producto.SectorId, e => e.SectorId, (combined, empleado) => new { combined.Pedido, combined.Producto, combined.Sector, Empleado = empleado })
                     .Join(_context.EstadosPedidos, combined => combined.Pedido.EstadosPedidoId, ep => ep.Id, (combined, estadoPedido) => new { combined.Pedido, combined.Producto, combined.Sector, combined.Empleado, EstadoPedido = estadoPedido })
                     .GroupBy(g => new { g.Sector.Descripcion, g.Empleado.Nombre }) // Agrupar por sector y empleado
                     .Select(group => new OperacionesPorSectorYEmpleado

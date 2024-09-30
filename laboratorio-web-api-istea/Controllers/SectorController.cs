@@ -20,7 +20,7 @@ public class SectorController : ControllerBase
     {
         try
         {
-            // Llama al servicio para obtener las operaciones por sector, pasando la descripción del sector
+            // Llama al servicio para obtener las operaciones por sector, pasando la descripciï¿½n del sector
             var result = await _sectorService.GetOperacionesPorSector(sectorDescripcion);
 
             if (result == null)
@@ -38,7 +38,8 @@ public class SectorController : ControllerBase
 
 
     [HttpGet("GetOperacionesPorSectorPorEmpleado/{sectorDescripcion}")]
-    public async Task<ActionResult<OperacionesPorSectorPorEmpleadoDTO>> GetOperacionesPorSectorPorEmpleado(string sectorDescripcion)
+    public async Task<ActionResult<OperacionesPorSectorPorEmpleadoDTO>> GetOperacionesPorSectorPorEmpleado(
+        string sectorDescripcion)
     {
         try
         {
@@ -57,5 +58,4 @@ public class SectorController : ControllerBase
             return StatusCode(500, $"Error interno del servidor: {ex.Message}");
         }
     }
-
 }

@@ -22,14 +22,14 @@ public class SectorService : ISectorService
         return _mapper.Map<List<OperacionesPorSectorDTO>>(operacionesPorSectorEmpleado);
     }
 
-    // Método para obtener la cantidad de operaciones por empleado
+    // Mï¿½todo para obtener la cantidad de operaciones por empleado
     private async Task<int> ObtenerCantidadDeOperacionesPorEmpleado(Sectore sector)
     {
-        // Obtén todos los empleados relacionados con el sector desde el repositorio de empleados
+        // Obtï¿½n todos los empleados relacionados con el sector desde el repositorio de empleados
         var empleados = await _unitOfWork.EmpleadoRepository.GetAll();
 
-        // Filtra los empleados que pertenecen al sector específico
-        var empleadosPorSector = empleados.Where(e => e.IdSector == sector.Id).ToList();
+        // Filtra los empleados que pertenecen al sector especï¿½fico
+        var empleadosPorSector = empleados.Where(e => e.SectorId == sector.Id).ToList();
 
         // Devuelve la cantidad de empleados en ese sector
         return empleadosPorSector.Count;

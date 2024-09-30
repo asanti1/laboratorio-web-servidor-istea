@@ -94,7 +94,7 @@ namespace laboratorio_web_api_istea.Migrations
                     Nombre = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Usuario = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    IdSector = table.Column<int>(type: "int", nullable: false),
+                    SectorId = table.Column<int>(type: "int", nullable: false),
                     RoleId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -107,8 +107,8 @@ namespace laboratorio_web_api_istea.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Empleados_Sectores_IdSector",
-                        column: x => x.IdSector,
+                        name: "FK_Empleados_Sectores_SectorId",
+                        column: x => x.SectorId,
                         principalTable: "Sectores",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -238,14 +238,14 @@ namespace laboratorio_web_api_istea.Migrations
 
             migrationBuilder.InsertData(
                 table: "Empleados",
-                columns: new[] { "Id", "IdSector", "Nombre", "Password", "RoleId", "Usuario" },
+                columns: new[] { "Id", "Nombre", "Password", "RoleId", "SectorId", "Usuario" },
                 values: new object[,]
                 {
-                    { 1, 1, "Carlos", "12345", 1, "carlos" },
-                    { 2, 2, "Roberto", "12345", 2, "roberto" },
-                    { 3, 3, "Maria", "12345", 3, "maria" },
-                    { 4, 5, "Juana", "12345", 4, "juana" },
-                    { 5, 6, "Marcelo", "12345", 5, "marcelo" }
+                    { 1, "Carlos", "12345", 1, 1, "carlos" },
+                    { 2, "Roberto", "12345", 2, 2, "roberto" },
+                    { 3, "Maria", "12345", 3, 3, "maria" },
+                    { 4, "Juana", "12345", 4, 4, "juana" },
+                    { 5, "Marcelo", "12345", 5, 3, "marcelo" }
                 });
 
             migrationBuilder.InsertData(
@@ -289,7 +289,11 @@ namespace laboratorio_web_api_istea.Migrations
                     { 17, "Vino Malbec", 2300m, 1, 130 },
                     { 18, "Cerveza Porter", 900m, 2, 280 },
                     { 19, "Torta de Chocolate", 1600m, 3, 30 },
-                    { 20, "Muffin de Arándanos", 400m, 4, 50 }
+                    { 20, "Muffin de Arándanos", 400m, 4, 50 },
+                    { 21, "Milanesa a caballo", 4800m, 3, 40 },
+                    { 22, "Hamburguesa de garbanzo", 3500m, 3, 20 },
+                    { 23, "Cerveza Corona", 2500m, 2, 70 },
+                    { 24, "Daikiri", 3700m, 1, 15 }
                 });
 
             migrationBuilder.CreateIndex(
@@ -298,14 +302,14 @@ namespace laboratorio_web_api_istea.Migrations
                 column: "MesaId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Empleados_IdSector",
-                table: "Empleados",
-                column: "IdSector");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Empleados_RoleId",
                 table: "Empleados",
                 column: "RoleId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Empleados_SectorId",
+                table: "Empleados",
+                column: "SectorId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Mesas_EstadosMesaId",

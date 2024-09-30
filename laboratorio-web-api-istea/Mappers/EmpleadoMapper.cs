@@ -18,10 +18,10 @@ public class EmpleadoMapper : Profile
         CreateMap<EmpleadoRequestDTO, Empleado>()
             .ForMember(src => src.Nombre, emp => emp.MapFrom(src => src.Nombre))
             .ForMember(src => src.RoleId, emp => emp.MapFrom(src => src.RoleId))
-            .ForMember(src => src.IdSector, emp => emp.MapFrom(src => src.IdSector));
+            .ForMember(src => src.SectorId, emp => emp.MapFrom(src => src.IdSector));
         CreateMap<EmpleadoUpdateRequestDTO, Empleado>()
            .ForMember(src => src.Nombre, emp => emp.MapFrom(src => src.Nombre))
            .ForMember(src => src.RoleId, emp => emp.MapFrom(src => src.RoleId))
-           .ForMember(src => src.IdSector, emp => emp.MapFrom(src => src.IdSector));
+           .ForMember(src => src.SectorId, emp => emp.MapFrom(src => src.IdSector));
     }
 }

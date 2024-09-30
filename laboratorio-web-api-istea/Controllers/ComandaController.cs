@@ -1,6 +1,7 @@
-using laboratorio_web_api_istea.DAL.Models;
+using laboratorio_web_api_istea.DAL.Entities;
 using laboratorio_web_api_istea.DTO.Comanda;
 using laboratorio_web_api_istea.Service.Interface;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace laboratorio_web_api_istea.Controllers;
@@ -31,6 +32,7 @@ public class ComandaController : ControllerBase
         }
     }
 
+    //falta devolver el id 
     [HttpPost("Agregar")]
     public async Task<ActionResult<ComandaResponseDTO>> Add([FromBody] ComandaPostDTO comanda)
     {
@@ -40,7 +42,8 @@ public class ComandaController : ControllerBase
     }
 
     [HttpPut("ActualizarComanda/{idComanda}")]
-    public async Task<ActionResult<ComandaResponseDTO>> Update([FromRoute] int idComanda, [FromBody] ComandaPostDTO comandaPostDto) // Cambiado a ComandaPostDTO
+    public async Task<ActionResult<ComandaResponseDTO>> Update([FromRoute] int idComanda,
+        [FromBody] ComandaPostDTO comandaPostDto) // Cambiado a ComandaPostDTO
     {
         if (comandaPostDto == null)
         {
@@ -50,7 +53,8 @@ public class ComandaController : ControllerBase
         try
         {
             // Llamar al servicio para actualizar la comanda
-            var comandaActualizada = await _comandaService.Update(idComanda, comandaPostDto); // Cambiado a comandaPostDto
+            var comandaActualizada =
+                await _comandaService.Update(idComanda, comandaPostDto); // Cambiado a comandaPostDto
 
             if (comandaActualizada == null)
             {
@@ -65,8 +69,8 @@ public class ComandaController : ControllerBase
         }
     }
 
-    //socio
     [HttpDelete("BorrarComanda/{idComanda}")]
+    [Authorize(Roles = RolesUsuarioConst.Socio)]
     public async Task<ActionResult> Delete([FromRoute] int idComanda)
     {
         bool success = await _comandaService.Delete(idComanda);

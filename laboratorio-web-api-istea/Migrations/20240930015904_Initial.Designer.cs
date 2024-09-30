@@ -12,8 +12,8 @@ using laboratorio_web_api_istea.DAL;
 namespace laboratorio_web_api_istea.Migrations
 {
     [DbContext(typeof(RestauranteContext))]
-    [Migration("20240911205952_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20240930015904_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -55,9 +55,6 @@ namespace laboratorio_web_api_istea.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("IdSector")
-                        .HasColumnType("int");
-
                     b.Property<string>("Nombre")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -69,15 +66,18 @@ namespace laboratorio_web_api_istea.Migrations
                     b.Property<int>("RoleId")
                         .HasColumnType("int");
 
+                    b.Property<int>("SectorId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Usuario")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("IdSector");
-
                     b.HasIndex("RoleId");
+
+                    b.HasIndex("SectorId");
 
                     b.ToTable("Empleados");
 
@@ -85,46 +85,46 @@ namespace laboratorio_web_api_istea.Migrations
                         new
                         {
                             Id = 1,
-                            IdSector = 1,
                             Nombre = "Carlos",
                             Password = "12345",
                             RoleId = 1,
+                            SectorId = 1,
                             Usuario = "carlos"
                         },
                         new
                         {
                             Id = 2,
-                            IdSector = 2,
                             Nombre = "Roberto",
                             Password = "12345",
                             RoleId = 2,
+                            SectorId = 2,
                             Usuario = "roberto"
                         },
                         new
                         {
                             Id = 3,
-                            IdSector = 3,
                             Nombre = "Maria",
                             Password = "12345",
                             RoleId = 3,
+                            SectorId = 3,
                             Usuario = "maria"
                         },
                         new
                         {
                             Id = 4,
-                            IdSector = 5,
                             Nombre = "Juana",
                             Password = "12345",
                             RoleId = 4,
+                            SectorId = 4,
                             Usuario = "juana"
                         },
                         new
                         {
                             Id = 5,
-                            IdSector = 6,
                             Nombre = "Marcelo",
                             Password = "12345",
                             RoleId = 5,
+                            SectorId = 3,
                             Usuario = "marcelo"
                         });
                 });
@@ -510,6 +510,38 @@ namespace laboratorio_web_api_istea.Migrations
                             Precio = 400m,
                             SectorId = 4,
                             Stock = 50
+                        },
+                        new
+                        {
+                            Id = 21,
+                            Descripcion = "Milanesa a caballo",
+                            Precio = 4800m,
+                            SectorId = 3,
+                            Stock = 40
+                        },
+                        new
+                        {
+                            Id = 22,
+                            Descripcion = "Hamburguesa de garbanzo",
+                            Precio = 3500m,
+                            SectorId = 3,
+                            Stock = 20
+                        },
+                        new
+                        {
+                            Id = 23,
+                            Descripcion = "Cerveza Corona",
+                            Precio = 2500m,
+                            SectorId = 2,
+                            Stock = 70
+                        },
+                        new
+                        {
+                            Id = 24,
+                            Descripcion = "Daikiri",
+                            Precio = 3700m,
+                            SectorId = 1,
+                            Stock = 15
                         });
                 });
 
@@ -609,17 +641,19 @@ namespace laboratorio_web_api_istea.Migrations
 
             modelBuilder.Entity("laboratorio_web_api_istea.DAL.Models.Empleado", b =>
                 {
-                    b.HasOne("laboratorio_web_api_istea.DAL.Models.Sectore", "Sectore")
-                        .WithMany("Empleados")
-                        .HasForeignKey("IdSector")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("laboratorio_web_api_istea.DAL.Models.Role", null)
-                        .WithMany("Empleados")
+                    b.HasOne("laboratorio_web_api_istea.DAL.Models.Role", "Role")
+                        .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("laboratorio_web_api_istea.DAL.Models.Sectore", "Sectore")
+                        .WithMany()
+                        .HasForeignKey("SectorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Role");
 
                     b.Navigation("Sectore");
                 });
@@ -641,7 +675,7 @@ namespace laboratorio_web_api_istea.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("laboratorio_web_api_istea.DAL.Models.EstadosPedido", null)
+                    b.HasOne("laboratorio_web_api_istea.DAL.Models.EstadosPedido", "EstadosPedido")
                         .WithMany("Pedidos")
                         .HasForeignKey("EstadosPedidoId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -655,13 +689,15 @@ namespace laboratorio_web_api_istea.Migrations
 
                     b.Navigation("Comanda");
 
+                    b.Navigation("EstadosPedido");
+
                     b.Navigation("Producto");
                 });
 
             modelBuilder.Entity("laboratorio_web_api_istea.DAL.Models.Producto", b =>
                 {
                     b.HasOne("laboratorio_web_api_istea.DAL.Models.Sectore", "Sector")
-                        .WithMany("Productos")
+                        .WithMany()
                         .HasForeignKey("SectorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -687,18 +723,6 @@ namespace laboratorio_web_api_istea.Migrations
             modelBuilder.Entity("laboratorio_web_api_istea.DAL.Models.Producto", b =>
                 {
                     b.Navigation("Pedidos");
-                });
-
-            modelBuilder.Entity("laboratorio_web_api_istea.DAL.Models.Role", b =>
-                {
-                    b.Navigation("Empleados");
-                });
-
-            modelBuilder.Entity("laboratorio_web_api_istea.DAL.Models.Sectore", b =>
-                {
-                    b.Navigation("Empleados");
-
-                    b.Navigation("Productos");
                 });
 #pragma warning restore 612, 618
         }

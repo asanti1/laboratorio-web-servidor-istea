@@ -35,11 +35,12 @@ public class PedidoService : IPedidoService
             RolesUsuarioConst.Bartender => "Barra de Tragos y Vinos",
             RolesUsuarioConst.Cervecero => "Barra de Choperas de Cerveza Artesanal",
             RolesUsuarioConst.Cocinero => "Cocina",
-            RolesUsuarioConst.Mozo => "", 
+            RolesUsuarioConst.Mozo => "",
         };
     }
 
-    public async Task<List<PedidoResponseDTO>> GetPedidosListos() {
+    public async Task<List<PedidoResponseDTO>> GetPedidosListos()
+    {
         var pedidosEntity = await _unitOfWork.PedidoRepository.GetPedidosListos();
         List<PedidoResponseDTO> pedidosDTO = _mapper.Map<List<PedidoResponseDTO>>(pedidosEntity);
         return pedidosDTO;
@@ -123,7 +124,8 @@ public class PedidoService : IPedidoService
         }
         catch (Exception ex)
         {
-            throw new ApplicationException($"An error occurred while retrieving the least ordered products: {ex.Message}");
+            throw new ApplicationException(
+                $"An error occurred while retrieving the least ordered products: {ex.Message}");
         }
     }
 
@@ -131,7 +133,7 @@ public class PedidoService : IPedidoService
     {
         try
         {
-            // Se obtiene la lista de pedidos más solicitados
+            // Se obtiene la lista de pedidos mï¿½s solicitados
             var pedidos = await _unitOfWork.PedidoRepository.GetMasPedido();
 
             // Mapeamos la lista de pedidos a PedidoResponseDTO
@@ -141,7 +143,8 @@ public class PedidoService : IPedidoService
         }
         catch (Exception ex)
         {
-            throw new ApplicationException($"An error occurred while retrieving the most ordered products: {ex.Message}");
+            throw new ApplicationException(
+                $"An error occurred while retrieving the most ordered products: {ex.Message}");
         }
     }
 
@@ -172,9 +175,11 @@ public class PedidoService : IPedidoService
 
     public async Task<PedidoResponseDTO> CambiarEstadoPedido(int id, string sector, int estado)
     {
+        Console.WriteLine(sector);
         // Llamamos al repositorio para cambiar el estado del pedido
         var pedido = await _unitOfWork.PedidoRepository.CambiarEstadoPedido(id, sector, estado);
 
+        
         // Mapear el pedido actualizado a PedidoResponseDTO
         var pedidoDto = _mapper.Map<PedidoResponseDTO>(pedido);
 

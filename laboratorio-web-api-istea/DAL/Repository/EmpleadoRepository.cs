@@ -41,7 +41,7 @@ namespace laboratorio_web_api_istea.DAL.Repository
                 throw new Exception("No se encontró esa entidad de empleado.");
 
             // Verificar si el sector existe en la base de datos
-            var sector = await _context.Sectores.FindAsync(emp.IdSector);
+            var sector = await _context.Sectores.FindAsync(emp.SectorId);
             if (sector == null)
                 throw new Exception("No se encontró el sector con ese ID.");
 
@@ -52,7 +52,7 @@ namespace laboratorio_web_api_istea.DAL.Repository
 
             // Actualizar las propiedades del empleado
             empleado.Nombre = emp.Nombre;
-            empleado.IdSector = emp.IdSector;
+            empleado.SectorId = emp.SectorId;
             empleado.RoleId = emp.RoleId;
 
             // Guardar los cambios en la base de datos

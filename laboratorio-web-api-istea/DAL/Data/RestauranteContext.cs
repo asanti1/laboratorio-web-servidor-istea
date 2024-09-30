@@ -29,9 +29,9 @@ public class RestauranteContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.ApplyConfiguration(new SectoreSeed());
         modelBuilder.ApplyConfiguration(new EstadosMesaSeed());
         modelBuilder.ApplyConfiguration(new EstadosPedidosSeed());
-        modelBuilder.ApplyConfiguration(new SectoreSeed());
         modelBuilder.ApplyConfiguration(new MesaSeed());
         modelBuilder.ApplyConfiguration(new ProductosSeed());
         modelBuilder.ApplyConfiguration(new RolesSeed());

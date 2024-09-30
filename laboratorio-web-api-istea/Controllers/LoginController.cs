@@ -12,6 +12,7 @@ namespace WebApI_Preparcial_II.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [AllowAnonymous]
     public class LoginController : ControllerBase
     {
         private IConfiguration _configuration;

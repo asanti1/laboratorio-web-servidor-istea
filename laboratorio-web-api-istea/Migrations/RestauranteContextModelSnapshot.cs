@@ -52,9 +52,6 @@ namespace laboratorio_web_api_istea.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("IdSector")
-                        .HasColumnType("int");
-
                     b.Property<string>("Nombre")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -66,15 +63,18 @@ namespace laboratorio_web_api_istea.Migrations
                     b.Property<int>("RoleId")
                         .HasColumnType("int");
 
+                    b.Property<int>("SectorId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Usuario")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("IdSector");
-
                     b.HasIndex("RoleId");
+
+                    b.HasIndex("SectorId");
 
                     b.ToTable("Empleados");
 
@@ -82,46 +82,46 @@ namespace laboratorio_web_api_istea.Migrations
                         new
                         {
                             Id = 1,
-                            IdSector = 1,
                             Nombre = "Carlos",
                             Password = "12345",
                             RoleId = 1,
+                            SectorId = 1,
                             Usuario = "carlos"
                         },
                         new
                         {
                             Id = 2,
-                            IdSector = 2,
                             Nombre = "Roberto",
                             Password = "12345",
                             RoleId = 2,
+                            SectorId = 2,
                             Usuario = "roberto"
                         },
                         new
                         {
                             Id = 3,
-                            IdSector = 3,
                             Nombre = "Maria",
                             Password = "12345",
                             RoleId = 3,
+                            SectorId = 3,
                             Usuario = "maria"
                         },
                         new
                         {
                             Id = 4,
-                            IdSector = 5,
                             Nombre = "Juana",
                             Password = "12345",
                             RoleId = 4,
+                            SectorId = 4,
                             Usuario = "juana"
                         },
                         new
                         {
                             Id = 5,
-                            IdSector = 6,
                             Nombre = "Marcelo",
                             Password = "12345",
                             RoleId = 5,
+                            SectorId = 3,
                             Usuario = "marcelo"
                         });
                 });
@@ -622,18 +622,8 @@ namespace laboratorio_web_api_istea.Migrations
                         {
                             Id = 4,
                             Descripcion = "Candy Bar"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            Descripcion = "Mesa"
-                        },
-                        new
-                        {
-                            Id = 6,
-                            Descripcion = "Administracion"
                         });
-        });
+                });
 
             modelBuilder.Entity("laboratorio_web_api_istea.DAL.Models.Comanda", b =>
                 {
@@ -648,15 +638,15 @@ namespace laboratorio_web_api_istea.Migrations
 
             modelBuilder.Entity("laboratorio_web_api_istea.DAL.Models.Empleado", b =>
                 {
-                    b.HasOne("laboratorio_web_api_istea.DAL.Models.Sectore", "Sectore")
-                        .WithMany()
-                        .HasForeignKey("IdSector")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("laboratorio_web_api_istea.DAL.Models.Role", "Role")
                         .WithMany()
                         .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("laboratorio_web_api_istea.DAL.Models.Sectore", "Sectore")
+                        .WithMany()
+                        .HasForeignKey("SectorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
