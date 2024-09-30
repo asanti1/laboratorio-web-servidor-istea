@@ -1,9 +1,8 @@
-namespace laboratorio_web_api_istea.DTO.Sector
+﻿namespace laboratorio_web_api_istea.DAL.Models
 {
-    public class OperacionesPorSectorDTO
+    public class OperacionesPorSector
     {
         public string NombreSector { get; set; } = null!;
         public int CantidadPedidos { get; set; } = 0;
     }
 }
-

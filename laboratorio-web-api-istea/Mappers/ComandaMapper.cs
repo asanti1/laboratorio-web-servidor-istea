@@ -18,5 +18,10 @@ public class ComandaMapper : Profile
             .ForMember(dest => dest.NombreProducto, opt => opt.MapFrom(src => src.Producto.Descripcion))
             .ForMember(dest => dest.Precio, opt => opt.MapFrom(src => src.Producto.Precio.ToString("F2")))
             .ForMember(dest => dest.Sector, opt => opt.MapFrom(src => src.Producto.Sector.Descripcion));
+
+        CreateMap<Comanda, ComandaResponseDTO>()
+            .ForMember(dest => dest.NombreMesa, opt => opt.MapFrom(src => src.Mesa.Nombre))
+            .ForMember(dest => dest.NombreCliente, opt => opt.MapFrom(src => src.NombreCliente))
+            .ForMember(dest => dest.Pedidos, opt => opt.MapFrom(src => src.Pedidos));
     }
 }

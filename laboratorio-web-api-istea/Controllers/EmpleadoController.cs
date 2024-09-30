@@ -1,4 +1,5 @@
 using System.Security.Principal;
+using laboratorio_web_api_istea.DAL.Entities;
 using laboratorio_web_api_istea.DAL.Models;
 using laboratorio_web_api_istea.DTO.Empleado;
 using laboratorio_web_api_istea.Service.Interface;
@@ -19,6 +20,7 @@ public class EmpleadoController : ControllerBase
         _empleadoService = empleadoService;
     }
 
+    [Authorize(Roles = RolesUsuarioConst.Socio)]
     [HttpGet("GetEmpleados")]
     public async Task<ActionResult<List<EmpleadoResponseDTO>>> GetAll()
     {
@@ -26,8 +28,7 @@ public class EmpleadoController : ControllerBase
         if (emp.Count == 0) return NotFound();
         return Ok(emp);
     }
-
-    [Authorize(Roles = "Socio")]
+    
     [HttpGet("GetEmpleadoPorId/{id}")]
     public async Task<ActionResult<EmpleadoResponseDTO>> Get(int id)
     {
@@ -36,6 +37,7 @@ public class EmpleadoController : ControllerBase
         return Ok(emp);
     }
 
+    [Authorize(Roles = RolesUsuarioConst.Socio)]
     [HttpPost("AgregarEmpleado")]
     public async Task<ActionResult<EmpleadoResponseDTO>> Add(EmpleadoRequestDTO empleado)
     {
@@ -43,7 +45,7 @@ public class EmpleadoController : ControllerBase
     }
 
     [HttpPut("EditarEmpleado/{id}")]
-    public async Task<ActionResult<EmpleadoResponseDTO>> Update([FromRoute] int id, EmpleadoRequestDTO empleado)
+    public async Task<ActionResult<EmpleadoResponseDTO>> Update([FromRoute] int id, EmpleadoUpdateRequestDTO empleado)
     {
         var emp = await _empleadoService.Update(id, empleado);
         if (emp != null)

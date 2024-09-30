@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using laboratorio_web_api_istea.DAL;
 
@@ -11,9 +12,11 @@ using laboratorio_web_api_istea.DAL;
 namespace laboratorio_web_api_istea.Migrations
 {
     [DbContext(typeof(RestauranteContext))]
-    partial class RestauranteContextModelSnapshot : ModelSnapshot
+    [Migration("20240926195500_ActualizarProductosSeed")]
+    partial class ActualizarProductosSeed
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -633,7 +636,7 @@ namespace laboratorio_web_api_istea.Migrations
                             Id = 6,
                             Descripcion = "Administracion"
                         });
-        });
+                });
 
             modelBuilder.Entity("laboratorio_web_api_istea.DAL.Models.Comanda", b =>
                 {
@@ -726,37 +729,6 @@ namespace laboratorio_web_api_istea.Migrations
                 {
                     b.Navigation("Pedidos");
                 });
-
-            modelBuilder.Entity("laboratorio_web_api_istea.DAL.Models.RegistroEmpleados", b =>
-            {
-                b.Property<int>("Id")
-                    .ValueGeneratedOnAdd()
-                    .HasColumnType("int");
-
-                SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                b.Property<int>("IdEmpleado")
-                    .HasColumnType("int");
-
-                b.Property<DateTime>("FechaHora")
-                    .IsRequired()
-                    .HasColumnType("datetime");
-
-                b.HasKey("Id");
-
-                b.ToTable("RegistroEmpleados");
-            });
-
-            modelBuilder.Entity("laboratorio_web_api_istea.DAL.Models.RegistroEmpleados", b =>
-            {
-                b.HasOne("laboratorio_web_api_istea.DAL.Models.Empleado", "Empleado")
-                    .WithMany()
-                    .HasForeignKey("IdEmpleado")
-                    .OnDelete(DeleteBehavior.Cascade)
-                    .IsRequired();
-
-                b.Navigation("Empleados");
-            });
 
             modelBuilder.Entity("laboratorio_web_api_istea.DAL.Models.Producto", b =>
                 {

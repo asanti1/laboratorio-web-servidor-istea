@@ -1,4 +1,5 @@
 ﻿using laboratorio_web_api_istea.DTO.Login;
+using laboratorio_web_api_istea.Service;
 using laboratorio_web_api_istea.Service.Interface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -46,12 +47,17 @@ namespace WebApI_Preparcial_II.Controllers
                     expires: DateTime.UtcNow.AddMinutes(10),
                     signingCredentials: signIn);
 
+                await _empleadoService.RegistrarLogin(userEntity.Id);
+
                 return Ok(new JwtSecurityTokenHandler().WriteToken(token));
             }
             else
             {
                 return BadRequest("");
             }
+
+            
+
         }
     }
 }

@@ -112,7 +112,7 @@ namespace laboratorio_web_api_istea.Migrations
                         new
                         {
                             Id = 4,
-                            IdSector = 3,
+                            IdSector = 5,
                             Nombre = "Juana",
                             Password = "12345",
                             RoleId = 4,
@@ -121,7 +121,7 @@ namespace laboratorio_web_api_istea.Migrations
                         new
                         {
                             Id = 5,
-                            IdSector = 4,
+                            IdSector = 6,
                             Nombre = "Marcelo",
                             Password = "12345",
                             RoleId = 5,
@@ -593,6 +593,16 @@ namespace laboratorio_web_api_istea.Migrations
                         {
                             Id = 4,
                             Descripcion = "Candy Bar"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Descripcion = "Mesa"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Descripcion = "Administracion"
                         });
                 });
 

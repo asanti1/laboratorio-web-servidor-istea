@@ -12,7 +12,9 @@ public class SectoreSeed : IEntityTypeConfiguration<Sectore>
             new Sectore() { Id = 1, Descripcion = "Barra de Tragos y Vinos" },
             new Sectore() { Id = 2, Descripcion = "Barra de Choperas de Cerveza Artesanal" },
             new Sectore() { Id = 3, Descripcion = "Cocina" },
-            new Sectore() { Id = 4, Descripcion = "Candy Bar" }
+            new Sectore() { Id = 4, Descripcion = "Candy Bar" },
+            new Sectore() { Id = 5, Descripcion = "Mesa" },
+            new Sectore() { Id = 6, Descripcion = "Administracion" }
         );
     }
 }

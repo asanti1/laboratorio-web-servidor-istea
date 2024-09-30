@@ -2,8 +2,8 @@
 {
     public enum EstadoPedidoEnum
     {
-        PENDIENTE,
-        EN_PREPARACION,
-        LISTO_PARA_SERVIR
+        PENDIENTE = 1,
+        EN_PREPARACION = 2,
+        LISTO_PARA_SERVIR = 3
     }
 }

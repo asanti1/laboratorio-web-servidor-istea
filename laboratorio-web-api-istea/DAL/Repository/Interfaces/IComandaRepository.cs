@@ -5,7 +5,9 @@ namespace laboratorio_web_api_istea.DAL.Repository.Interfaces
 {
     public interface IComandaRepository : IRepository<Comanda>
     {
-        public Task<ComandaGetDTO> ObtenerComandaPorId(int idComanda);
+        public Task<Comanda> ObtenerComandaPorId(int idComanda);
         public Task<Comanda> AgregarComanda(ComandaPostDTO comanda);
+        public Task<Comanda> ActualizarComanda(Comanda comanda);
     }
+
 }

@@ -15,15 +15,47 @@ public class SectorController : ControllerBase
         _sectorService = sectorService;
     }
 
-    [HttpGet("GetOperacionesPorSector")]
-    public async Task<ActionResult<OperacionesPorSectorDTO>> GetOperacionesPorSector()
+    [HttpGet("GetOperacionesPorSector/{sectorDescripcion}")]
+    public async Task<ActionResult<OperacionesPorSectorDTO>> GetOperacionesPorSector(string sectorDescripcion)
     {
-        return await _sectorService.GetOperacionesPorSector();
+        try
+        {
+            // Llama al servicio para obtener las operaciones por sector, pasando la descripción del sector
+            var result = await _sectorService.GetOperacionesPorSector(sectorDescripcion);
+
+            if (result == null)
+            {
+                return NotFound($"No se encontraron operaciones para el sector: {sectorDescripcion}");
+            }
+
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"Error interno del servidor: {ex.Message}");
+        }
     }
 
-    [HttpGet("GetOperacionesPorSectorPorEmpleado")]
-    public async Task<ActionResult<OperacionesPorSectorPorEmpleadoDTO>> GetOperacionesPorSectorPorEmpleado()
+
+    [HttpGet("GetOperacionesPorSectorPorEmpleado/{sectorDescripcion}")]
+    public async Task<ActionResult<OperacionesPorSectorPorEmpleadoDTO>> GetOperacionesPorSectorPorEmpleado(string sectorDescripcion)
     {
-        return await _sectorService.GetOperacionesPorSectorPorEmpleado();
+        try
+        {
+            // Llama al servicio para obtener las operaciones por sector por empleado
+            var result = await _sectorService.GetOperacionesPorSectorPorEmpleado(sectorDescripcion);
+
+            if (result == null)
+            {
+                return NotFound($"No se encontraron empleados para el sector: {sectorDescripcion}");
+            }
+
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"Error interno del servidor: {ex.Message}");
+        }
     }
+
 }

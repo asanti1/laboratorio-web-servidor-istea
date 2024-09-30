@@ -17,8 +17,11 @@ public class EmpleadoMapper : Profile
             .ForMember(src => src.Rol, emp => emp.MapFrom(src => src.Role.Descripcion));
         CreateMap<EmpleadoRequestDTO, Empleado>()
             .ForMember(src => src.Nombre, emp => emp.MapFrom(src => src.Nombre))
-            .ForMember(src => src.Usuario, emp => emp.MapFrom(src => src.Usuario))
             .ForMember(src => src.RoleId, emp => emp.MapFrom(src => src.RoleId))
             .ForMember(src => src.IdSector, emp => emp.MapFrom(src => src.IdSector));
+        CreateMap<EmpleadoUpdateRequestDTO, Empleado>()
+           .ForMember(src => src.Nombre, emp => emp.MapFrom(src => src.Nombre))
+           .ForMember(src => src.RoleId, emp => emp.MapFrom(src => src.RoleId))
+           .ForMember(src => src.IdSector, emp => emp.MapFrom(src => src.IdSector));
     }
 }

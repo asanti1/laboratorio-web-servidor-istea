@@ -57,17 +57,20 @@ builder.Services.AddScoped<IEmpleadoService, EmpleadoService>();
 builder.Services.AddScoped<IPedidoService, PedidoService>();
 builder.Services.AddScoped<ISectorService, SectorService>();
 builder.Services.AddScoped<IComandaService, ComandaService>();
+builder.Services.AddScoped<IMesaService, MesaService>();
 
 builder.Services.AddScoped<IEmpleadoRepository, EmpleadoRepository>();
 builder.Services.AddScoped<IPedidoRepository, PedidoRepository>();
 builder.Services.AddScoped<ISectorRepository, SectorRepository>();
 builder.Services.AddScoped<IComandaRepository, ComandaRepository>();
+builder.Services.AddScoped<IMesaRepository, MesaRepository>();
 
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>(x => new UnitOfWork(x.GetRequiredService<RestauranteContext>(),
     x.GetRequiredService<IComandaRepository>(),
     x.GetRequiredService<IEmpleadoRepository>(),
     x.GetRequiredService<IPedidoRepository>(),
-    x.GetRequiredService<ISectorRepository>()
+    x.GetRequiredService<ISectorRepository>(),
+    x.GetRequiredService<IMesaRepository>()
 ));
 builder.Services.AddAutoMapper(typeof(Program));
 
