@@ -25,7 +25,6 @@ public class PedidoMapper : Profile
            .ForMember(src => src.ProductoId, emp => emp.MapFrom(src => src.IdProducto))
            .ForMember(src => src.ComandaId, emp => emp.MapFrom(src => src.IdComanda))
            .ForMember(src => src.EstadosPedidoId, emp => emp.MapFrom(src => src.IdEstado))
-           .ForMember(src => src.FechaCreacion, emp => emp.MapFrom(src => src.FechaCreacion))
-           .ForMember(src => src.FechaFinalizacion, emp => emp.MapFrom(src => src.FechaFinalizacion));
+           .ForMember(src => src.FechaCreacion, emp => emp.MapFrom(src => src.FechaCreacion));
     }
 }

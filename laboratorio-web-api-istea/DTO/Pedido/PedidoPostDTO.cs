@@ -10,7 +10,5 @@ public class PedidoPostDTO
 
     public int IdEstado { get; set; }
 
-    public DateTime? FechaFinalizacion { get; set; }
-
     public DateTime? FechaCreacion { get; set; }
 }
