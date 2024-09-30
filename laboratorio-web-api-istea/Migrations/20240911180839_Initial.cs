@@ -39,6 +39,27 @@ namespace laboratorio_web_api_istea.Migrations
                     table.PrimaryKey("PK_EstadosPedidos", x => x.Id);
                 });
 
+            migrationBuilder.InsertData(
+                table: "EstadosMesas",
+                columns: new[] { "Id", "Descripcion" },
+                values: new object[,]
+                {
+                                { 1, "Cliente esperando pedido" },
+                                { 2, "Cliente comiendo" },
+                                { 3, "Cliente pagando" },
+                                { 4, "Cerrada" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "EstadosPedidos",
+                columns: new[] { "Id", "Descripcion" },
+                values: new object[,]
+                {
+                    { 1, "Pendiente" },
+                    { 2, "En preparación" },
+                    { 3, "Listo para servir" }
+                });
+
             migrationBuilder.CreateTable(
                 name: "Roles",
                 columns: table => new
@@ -52,6 +73,7 @@ namespace laboratorio_web_api_istea.Migrations
                     table.PrimaryKey("PK_Roles", x => x.Id);
                 });
 
+
             migrationBuilder.CreateTable(
                 name: "Sectores",
                 columns: table => new
@@ -63,6 +85,31 @@ namespace laboratorio_web_api_istea.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Sectores", x => x.Id);
+                });
+
+            migrationBuilder.InsertData(
+                table: "Roles",
+                columns: new[] { "Id", "Descripcion" },
+                values: new object[,]
+                {
+                                { 1, "Bartender" },
+                                { 2, "Cervecero" },
+                                { 3, "Cocinero" },
+                                { 4, "Mozo" },
+                                { 5, "Socio" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Sectores",
+                columns: new[] { "Id", "Descripcion" },
+                values: new object[,]
+                {
+                    { 1, "Barra de Tragos y Vinos" },
+                    { 2, "Barra de Choperas de Cerveza Artesanal" },
+                    { 3, "Cocina" },
+                    { 4, "Candy Bar" },
+                    { 5, "Mesa" },
+                    { 6, "Administracion" }
                 });
 
             migrationBuilder.CreateTable(
@@ -192,49 +239,25 @@ namespace laboratorio_web_api_istea.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.InsertData(
-                table: "EstadosMesas",
-                columns: new[] { "Id", "Descripcion" },
-                values: new object[,]
-                {
-                    { 1, "Cliente esperando pedido" },
-                    { 2, "Cliente comiendo" },
-                    { 3, "Cliente pagando" },
-                    { 4, "Cerrada" }
-                });
-
-            migrationBuilder.InsertData(
-                table: "EstadosPedidos",
-                columns: new[] { "Id", "Descripcion" },
-                values: new object[,]
-                {
-                    { 1, "Pendiente" },
-                    { 2, "En preparación" },
-                    { 3, "Listo para servir" }
-                });
-
-            migrationBuilder.InsertData(
-                table: "Roles",
-                columns: new[] { "Id", "Descripcion" },
-                values: new object[,]
-                {
-                    { 1, "Bartender" },
-                    { 2, "Cervecero" },
-                    { 3, "Cocinero" },
-                    { 4, "Mozo" },
-                    { 5, "Socio" }
-                });
-
-            migrationBuilder.InsertData(
-                table: "Sectores",
-                columns: new[] { "Id", "Descripcion" },
-                values: new object[,]
-                {
-                    { 1, "Barra de Tragos y Vinos" },
-                    { 2, "Barra de Choperas de Cerveza Artesanal" },
-                    { 3, "Cocina" },
-                    { 4, "Candy Bar" }
-                });
+            migrationBuilder.CreateTable(
+               name: "RegistroEmpleados",
+               columns: table => new
+               {
+                   Id = table.Column<int>(type: "int", nullable: false)
+                       .Annotation("SqlServer:Identity", "1, 1"),
+                   IdEmpleado = table.Column<int>(type: "int", nullable: false),
+                   FechaHora = table.Column<DateTime>(type: "datetime", nullable: false)
+               },
+               constraints: table =>
+               {
+                   table.PrimaryKey("PK_RegistroEmpleados", x => x.Id);
+                   table.ForeignKey(
+                       name: "FK_RegistroEmpleados_Empleados",
+                       column: x => x.IdEmpleado,
+                       principalTable: "Empleados",
+                       principalColumn: "Id",
+                       onDelete: ReferentialAction.Cascade);
+               });
 
             migrationBuilder.InsertData(
                 table: "Empleados",
@@ -292,6 +315,7 @@ namespace laboratorio_web_api_istea.Migrations
                     { 20, "Muffin de Arándanos", 400m, 4, 50 }
                 });
 
+            //INDICES
             migrationBuilder.CreateIndex(
                 name: "IX_Comandas_MesaId",
                 table: "Comandas",
@@ -331,6 +355,11 @@ namespace laboratorio_web_api_istea.Migrations
                 name: "IX_Productos_SectorId",
                 table: "Productos",
                 column: "SectorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RegistroEmpleados_IdEmpleado",
+                table: "RegistroEmpleados",
+                column: "IdEmpleado");
         }
 
         /// <inheritdoc />
@@ -362,6 +391,9 @@ namespace laboratorio_web_api_istea.Migrations
 
             migrationBuilder.DropTable(
                 name: "EstadosMesas");
+
+            migrationBuilder.DropTable(
+            name: "RegistroEmpleados");
         }
     }
 }

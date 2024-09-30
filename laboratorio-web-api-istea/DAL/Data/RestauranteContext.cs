@@ -26,6 +26,7 @@ public class RestauranteContext : DbContext
     public DbSet<Producto> Productos { get; set; }
     public DbSet<Role> Roles { get; set; }
     public DbSet<Sectore> Sectores { get; set; }
+    public DbSet<RegistroEmpleados> RegistroEmpleados{ get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

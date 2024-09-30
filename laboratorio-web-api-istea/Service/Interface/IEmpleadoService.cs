@@ -16,4 +16,6 @@ public interface IEmpleadoService
 
     Task<OperacionesPorEmpleadoDTO> GetOperacionesPorEmpleado();
     Task<EmpleadoResponseDTO?> GetEmpleadoByUsuarioPass(string user, string pass);
+
+    Task RegistrarLogin(int empleadoId);
 }

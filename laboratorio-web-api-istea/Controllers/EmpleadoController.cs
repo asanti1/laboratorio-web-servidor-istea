@@ -37,7 +37,7 @@ public class EmpleadoController : ControllerBase
         return Ok(emp);
     }
 
-    [Authorize(Roles = "Socio")]
+    [Authorize(Roles = RolesUsuarioConst.Socio)]
     [HttpPost("AgregarEmpleado")]
     public async Task<ActionResult<EmpleadoResponseDTO>> Add(EmpleadoRequestDTO empleado)
     {

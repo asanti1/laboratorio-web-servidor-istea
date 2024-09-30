@@ -593,7 +593,18 @@ namespace laboratorio_web_api_istea.Migrations
                         {
                             Id = 4,
                             Descripcion = "Candy Bar"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Descripcion = "Mesa"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Descripcion = "Administracion"
                         });
+
                 });
 
             modelBuilder.Entity("laboratorio_web_api_istea.DAL.Models.Comanda", b =>

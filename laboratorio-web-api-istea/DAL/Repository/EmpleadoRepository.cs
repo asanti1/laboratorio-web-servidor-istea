@@ -87,5 +87,15 @@ namespace laboratorio_web_api_istea.DAL.Repository
                 .Where(e => e.Usuario == usuario)
                 .FirstOrDefaultAsync();
         }
+
+        public async Task RegistrarLogin(int empleadoId)
+        {
+            var registroEmpleado = new RegistroEmpleados();
+            registroEmpleado.IdEmpleado = empleadoId;
+            registroEmpleado.FechaHora= DateTime.Now;
+
+            _context.RegistroEmpleados.Add(registroEmpleado);
+            await _context.SaveChangesAsync();
+        }
     }
 }

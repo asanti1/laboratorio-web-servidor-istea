@@ -11,6 +11,8 @@ namespace laboratorio_web_api_istea.DAL
 
         ISectorRepository SectorRepository { get; }
 
+        IMesaRepository MesaRepository { get; }
+
         Task<int> Save();
     }
 }

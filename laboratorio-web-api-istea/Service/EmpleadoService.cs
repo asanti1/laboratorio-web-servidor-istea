@@ -126,4 +126,8 @@ public class EmpleadoService : IEmpleadoService
 
         return _mapper.Map<EmpleadoResponseDTO>(empleado); ;
     }
+
+    public async Task RegistrarLogin(int empleadoId) {
+        await _unitOfWork.EmpleadoRepository.RegistrarLogin(empleadoId);
+    }
 }

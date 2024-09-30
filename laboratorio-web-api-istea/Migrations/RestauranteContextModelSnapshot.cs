@@ -727,6 +727,37 @@ namespace laboratorio_web_api_istea.Migrations
                     b.Navigation("Pedidos");
                 });
 
+            modelBuilder.Entity("laboratorio_web_api_istea.DAL.Models.RegistroEmpleados", b =>
+            {
+                b.Property<int>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("int");
+
+                SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                b.Property<int>("IdEmpleado")
+                    .HasColumnType("int");
+
+                b.Property<DateTime>("FechaHora")
+                    .IsRequired()
+                    .HasColumnType("datetime");
+
+                b.HasKey("Id");
+
+                b.ToTable("RegistroEmpleados");
+            });
+
+            modelBuilder.Entity("laboratorio_web_api_istea.DAL.Models.RegistroEmpleados", b =>
+            {
+                b.HasOne("laboratorio_web_api_istea.DAL.Models.Empleado", "Empleado")
+                    .WithMany()
+                    .HasForeignKey("IdEmpleado")
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired();
+
+                b.Navigation("Empleados");
+            });
+
             modelBuilder.Entity("laboratorio_web_api_istea.DAL.Models.Producto", b =>
                 {
                     b.Navigation("Pedidos");
