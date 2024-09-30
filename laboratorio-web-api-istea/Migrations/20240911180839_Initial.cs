@@ -315,6 +315,7 @@ namespace laboratorio_web_api_istea.Migrations
                     { 20, "Muffin de Arándanos", 400m, 4, 50 }
                 });
 
+
             //INDICES
             migrationBuilder.CreateIndex(
                 name: "IX_Comandas_MesaId",
@@ -361,7 +362,6 @@ namespace laboratorio_web_api_istea.Migrations
                 table: "RegistroEmpleados",
                 column: "IdEmpleado");
         }
-
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
