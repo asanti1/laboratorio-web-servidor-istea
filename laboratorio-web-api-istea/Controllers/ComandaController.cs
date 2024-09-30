@@ -1,6 +1,8 @@
+using laboratorio_web_api_istea.DAL.Entities;
 using laboratorio_web_api_istea.DAL.Models;
 using laboratorio_web_api_istea.DTO.Comanda;
 using laboratorio_web_api_istea.Service.Interface;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace laboratorio_web_api_istea.Controllers;
@@ -31,6 +33,7 @@ public class ComandaController : ControllerBase
         }
     }
 
+    [Authorize(Roles = RolesUsuarioConst.Mozo)]
     [HttpPost("Agregar")]
     public async Task<ActionResult<ComandaResponseDTO>> Add([FromBody] ComandaPostDTO comanda)
     {
@@ -39,6 +42,7 @@ public class ComandaController : ControllerBase
         return Created(String.Empty, comandaCreada);
     }
 
+    [Authorize(Roles = RolesUsuarioConst.Mozo)]
     [HttpPut("ActualizarComanda/{idComanda}")]
     public async Task<ActionResult<ComandaResponseDTO>> Update([FromRoute] int idComanda, [FromBody] ComandaPostDTO comandaPostDto) // Cambiado a ComandaPostDTO
     {
@@ -66,6 +70,7 @@ public class ComandaController : ControllerBase
     }
 
     //socio
+    [Authorize(Roles = RolesUsuarioConst.Socio + "," + RolesUsuarioConst.Mozo)]
     [HttpDelete("BorrarComanda/{idComanda}")]
     public async Task<ActionResult> Delete([FromRoute] int idComanda)
     {
