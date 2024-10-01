@@ -85,7 +85,6 @@ public class PedidoController : ControllerBase
         {
             var userRol = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
 
-
             var sectorDescription = _pedidoService.ObtenerSectorPorRol(userRol);
 
             var pedido = await _pedidoService.CambiarEstadoPedido(pedidoId, sectorDescription, (int) EstadoPedidoEnum.EN_PREPARACION);
@@ -96,6 +95,10 @@ public class PedidoController : ControllerBase
         catch (KeyNotFoundException ex)
         {
             return NotFound(ex.Message);
+        }
+        catch (UnauthorizedAccessException ex) // Manejar la excepción de acceso no autorizado
+        {
+            return StatusCode(StatusCodes.Status403Forbidden, ex.Message);
         }
         catch (Exception ex)
         {

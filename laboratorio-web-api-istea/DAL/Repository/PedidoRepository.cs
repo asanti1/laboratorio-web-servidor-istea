@@ -3,6 +3,8 @@ using laboratorio_web_api_istea.DAL.Enum;
 using laboratorio_web_api_istea.DAL.Models;
 using laboratorio_web_api_istea.DAL.Repository.Interfaces;
 using laboratorio_web_api_istea.DTO.Pedido;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 
 namespace laboratorio_web_api_istea.DAL.Repository
@@ -153,38 +155,36 @@ namespace laboratorio_web_api_istea.DAL.Repository
 
         public async Task<Pedido> CambiarEstadoPedido(int idPedido, string sector, int estado)
         {
-            try
+            var pedido = await _context.Pedidos
+            .Include(p => p.Comanda)
+            .ThenInclude(c => c.Mesa)
+            .Include(p => p.Producto)
+            .ThenInclude(pr => pr.Sector)
+            .Include(p => p.EstadosPedido)
+            .FirstOrDefaultAsync(p => p.Id == idPedido);
+
+            if (pedido == null)
             {
-                var pedido = await _context.Pedidos
-                .Include(p => p.Comanda)
-                .ThenInclude(c => c.Mesa)
-                .Include(p => p.Producto)
-                .ThenInclude(pr => pr.Sector)
-                .Include(p => p.EstadosPedido)
-                .FirstOrDefaultAsync(p => p.Id == idPedido && p.Producto.Sector.Descripcion == sector);  // Filtra por ID y sector del empleado
-
-                if (pedido == null)
-                {
-                    throw new KeyNotFoundException("Order not found.");
-                }
-
-                // Cambiar el estado del pedido
-                pedido.EstadosPedidoId = estado;
-                if(estado == (int)EstadoPedidoEnum.LISTO_PARA_SERVIR)
-                {
-                    pedido.FechaFinalizacion = DateTime.Now;
-                }
-
-                await _context.SaveChangesAsync();
-
-                pedido = await this.GetPedidoPorId(idPedido);
-
-                return pedido; // Devuelve el Pedido
+                throw new KeyNotFoundException("Order not found.");
             }
-            catch (Exception ex)
+
+            if(pedido.Producto.Sector.Descripcion != sector)
             {
-                throw new ApplicationException("An error occurred while changing the order status.", ex);
+                throw new UnauthorizedAccessException("You are not authorized to change this order.");
             }
+
+            // Cambiar el estado del pedido
+            pedido.EstadosPedidoId = estado;
+            if(estado == (int)EstadoPedidoEnum.LISTO_PARA_SERVIR)
+            {
+                pedido.FechaFinalizacion = DateTime.Now;
+            }
+
+            await _context.SaveChangesAsync();
+
+            pedido = await this.GetPedidoPorId(idPedido);
+
+            return pedido; // Devuelve el Pedido
         }
 
         public async Task<Pedido> AddPedido(Pedido pedido)
