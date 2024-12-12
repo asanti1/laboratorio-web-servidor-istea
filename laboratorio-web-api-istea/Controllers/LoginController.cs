@@ -53,7 +53,7 @@ namespace WebApI_Preparcial_II.Controllers
             }
             else
             {
-                return BadRequest("");
+                return StatusCode(401, "El usuario o contraseña son incorrectos, intente nuevamente.");
             }
 
             
