@@ -24,34 +24,67 @@ public class MesaController : ControllerBase
 
     [Authorize(Roles = RolesUsuarioConst.Socio)]
     [HttpPut("CerrarMesa")]
-    public ActionResult CerrarMesa(string nombreMesa)
+    public async Task<ActionResult> CerrarMesa(string nombreMesa)
     {
-        _mesaService.CerrarMesa(nombreMesa);
-        return NoContent();
+        try
+        {
+            await _mesaService.CerrarMesa(nombreMesa);
+            return Ok($"La mesa {nombreMesa} se cerró correctamente");
+        }
+        catch (Exception ex)
+        {
+            return BadRequest($"Error: {ex.Message}");
+        }
     }
+
 
     [Authorize(Roles = RolesUsuarioConst.Socio + "," + RolesUsuarioConst.Mozo)]
     [HttpPut("AbrirMesa")]
-    public ActionResult AbrirMesa(string nombreMesa)
+    public async Task <ActionResult> AbrirMesa(string nombreMesa)
     {
-        _mesaService.CambiarEstado(nombreMesa, (int)EstadoMesaEnum.ClienteEsperando);
-        return NoContent();
+
+        try
+        {
+            await _mesaService.CambiarEstado(nombreMesa, (int)EstadoMesaEnum.ClienteEsperando);
+            return Ok($"La mesa {nombreMesa} se abrio correctamente");
+        }
+        catch (Exception ex)
+        {
+            return BadRequest($"Error: {ex.Message}");
+        }
+    
+     
     }
 
     [Authorize(Roles = RolesUsuarioConst.Mozo)]
     [HttpPut("CambiarEstadoClienteComiendo")]
-    public ActionResult CambiarEstadoClienteComiendo(string nombreMesa)
+    public async Task<ActionResult> CambiarEstadoClienteComiendo(string nombreMesa)
     {
-        
-        _mesaService.CambiarEstado(nombreMesa, (int) EstadoMesaEnum.ClienteComiendo);
-        return NoContent();
+
+        try
+        {
+            await _mesaService.CambiarEstado(nombreMesa, (int)EstadoMesaEnum.ClienteEsperando);
+            return Ok($"La mesa {nombreMesa} cambio su estado");
+        }
+        catch (Exception ex)
+        {
+            return BadRequest($"Error: {ex.Message}");
+        }
     }
 
     [Authorize(Roles = RolesUsuarioConst.Mozo)]
     [HttpPut("CambiarEstadoClientePagando")]
-    public ActionResult CambiarEstadoClientePagando(string nombreMesa)
+    public async Task<ActionResult> CambiarEstadoClientePagando(string nombreMesa)
+
     {
-        _mesaService.CambiarEstado(nombreMesa, (int) EstadoMesaEnum.ClientePagando);
-        return NoContent();
+        try
+        {
+            await _mesaService.CambiarEstado(nombreMesa, (int)EstadoMesaEnum.ClienteEsperando);
+            return Ok($"La mesa {nombreMesa} cambio su estado");
+        }
+        catch (Exception ex)
+        {
+            return BadRequest($"Error: {ex.Message}");
+        }
     }
 }

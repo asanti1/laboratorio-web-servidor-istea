@@ -4,7 +4,7 @@ namespace laboratorio_web_api_istea.DAL.Models
 {
     public class RegistroEmpleados : ClaseBase
     {
-        public int Id { get; set; } = 0;
+        //public int Id { get; set; } = 0;
 
         [ForeignKey(nameof(Empleado))] public int IdEmpleado { get; set; }
 

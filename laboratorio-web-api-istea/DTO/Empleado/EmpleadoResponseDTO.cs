@@ -2,7 +2,7 @@
 {
     public class EmpleadoResponseDTO
     {
-        public required int Id { get; set; }
+        public required int Id { get; set; } 
         public required string Nombre { get; set; }
 
         public required string Usuario { get; set; }

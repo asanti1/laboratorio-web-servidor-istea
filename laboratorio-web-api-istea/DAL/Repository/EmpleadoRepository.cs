@@ -20,8 +20,14 @@ namespace laboratorio_web_api_istea.DAL.Repository
         {
             _context.Empleados.Add(empleado);
             await _context.SaveChangesAsync();
-            return empleado;
+
+            // Consultar nuevamente para incluir datos relacionados
+            return await _context.Empleados
+                .Include(e => e.Sectore)
+                .Include(e => e.Role)
+                .FirstOrDefaultAsync(e => e.Id == empleado.Id);
         }
+
 
         public async Task BorrarEmpleado(int empleadoId)
         {

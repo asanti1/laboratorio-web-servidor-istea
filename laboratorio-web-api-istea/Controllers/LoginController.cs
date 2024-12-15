@@ -49,7 +49,7 @@ namespace WebApI_Preparcial_II.Controllers
 
                 await _empleadoService.RegistrarLogin(userEntity.Id);
 
-                return Ok(new JwtSecurityTokenHandler().WriteToken(token));
+                return StatusCode(201, new JwtSecurityTokenHandler().WriteToken(token));
             }
             else
             {
